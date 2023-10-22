@@ -2,13 +2,9 @@ import { useEffect, useState } from "react";
 import { endpoints } from "../../assets/apis";
 import Case, { CaseDetails } from "./Case";
 import { Pagination } from "../common/Pagination";
-import { Form, InputGroup } from "react-bootstrap";
 import { apiCalls } from "../../assets/apiCalls";
 import { notifiers } from "../../assets/notifiers";
 import { FormModal } from "../common/FormModal";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHandPointer } from "@fortawesome/free-solid-svg-icons";
-import { NoResults } from "../common/NoResults";
 import EditModal from "../common/EditModal";
 import { DeleteModal } from "../common/DeleteModal";
 
@@ -162,20 +158,42 @@ export default function Cases({ setLoading }) {
     destroy: {
       DeleteComponent: DeleteModal,
       interceptDestruction: (payload, callback) => {
-        apiCalls.deleteRequest({
-          endpoint: endpoints.cases.deleteCase.replace("<:caseId>", payload),
-          httpHeaders: {
-            Accept: "application/json",
-            Authorization: "Bearer " + sessionStorage.getItem("token"),
-          },
-          successCallback: (res) => {
-            callback(payload, -1);
-            notifiers.httpSuccess("Record Deleted");
-          },
-          errorCallback: (err) => {
-            notifiers.httpError(err);
-          },
-        });
+        setLoading(true);
+        if (Array.isArray(payload)) {
+          apiCalls.deleteRequest({
+            endpoint: endpoints.cases.bulkDestruction,
+            httpHeaders: {
+              Accept: "application/json",
+              Authorization: "Bearer " + sessionStorage.getItem("token"),
+              "Content-Type": "application/json",
+            },
+            httpBody: { case_ids: payload },
+            successCallback: (res) => {
+              setLoading(false);
+              callback(payload, -1);
+              notifiers.httpSuccess("Multiple Cases Deleted");
+            },
+            errorCallback: (res) => {
+              setLoading(false);
+              notifiers.httpError(err);
+            },
+          });
+        } else {
+          apiCalls.deleteRequest({
+            endpoint: endpoints.cases.deleteCase.replace("<:caseId>", payload),
+            httpHeaders: {
+              Accept: "application/json",
+              Authorization: "Bearer " + sessionStorage.getItem("token"),
+            },
+            successCallback: (res) => {
+              callback(payload, -1);
+              notifiers.httpSuccess("Case Deleted");
+            },
+            errorCallback: (err) => {
+              notifiers.httpError(err);
+            },
+          });
+        }
       },
       deleteProps: {
         anchorText: "Delete Case",
@@ -184,7 +202,7 @@ export default function Cases({ setLoading }) {
         consequences: (
           <div className="text-sm">
             <h5 className="text-sm py-2 px-2 font-bold">
-              Deleting this Case has the following side effects
+              Deleting a Case has the following side effects
             </h5>
             <h4 className="px-4 text-gray-700 font-bold">
               The following information will be lost:
@@ -198,7 +216,7 @@ export default function Cases({ setLoading }) {
               <li>Documents associated with the case</li>
             </ul>
 
-            <div className="mx-auto flex justify-center">
+            {/* <div className="mx-auto flex justify-center">
               <InputGroup className="w-max mt-4">
                 <InputGroup.Text>
                   <Form.Check type="switch" className="" />
@@ -207,7 +225,7 @@ export default function Cases({ setLoading }) {
                   Archive Instead
                 </InputGroup.Text>
               </InputGroup>
-            </div>
+            </div> */}
           </div>
         ),
       },

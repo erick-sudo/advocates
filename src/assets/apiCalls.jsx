@@ -58,14 +58,21 @@ export const apiCalls = {
   deleteRequest: ({
     endpoint = baseUrl,
     httpMethod = "DELETE",
+    httpBody,
     httpHeaders = {},
     successCallback = (res) => {},
     errorCallback = (res) => {},
   }) => {
-    fetch(endpoint, {
+    const reqConfig = {
       method: httpMethod,
       headers: httpHeaders,
-    })
+    };
+
+    if (typeof httpBody === "object") {
+      reqConfig.body = JSON.stringify(httpBody);
+    }
+
+    fetch(endpoint, reqConfig)
       .then((response) => {
         if (response.status < 400) {
           successCallback("Successfully Deleted");

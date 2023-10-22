@@ -7,7 +7,9 @@ import { faExclamation } from "@fortawesome/free-solid-svg-icons/faExclamation";
 
 export function DeleteModal({
   normalCrudManipulator = () => {},
+  multiple = false,
   recordPrimaryKey,
+  recordPrimaryKeys,
   description = "Delete",
   anchorText = "Delete",
   anchorClassName = "flex gap-2 items-center box_shadow rounded px-4 py-2 bg-gray-100 text-amber-800 hover:text-black hover:bg-amber-700 hover:-translate-y-2 duration-200",
@@ -20,7 +22,7 @@ export function DeleteModal({
   const handleSubmit = () => {
     if (typeof interceptDestruction !== "undefined") {
       if (typeof interceptDestruction === "function") {
-        interceptDestruction(recordPrimaryKey);
+        interceptDestruction(multiple ? recordPrimaryKeys : recordPrimaryKey);
       } else {
         alert("Destruction interceptor should be a function");
       }
@@ -52,7 +54,7 @@ export function DeleteModal({
         submitButtonClassName="bg-red-800 text-white hover:bg-red-600"
         cancelButtonClassName="bg-amber-600 text-white"
         cancelText="No"
-        anchorText={anchorText}
+        anchorText={anchorText + "" + (multiple ? "s" : "")}
         icon={icon}
         submitText="Yes"
         description={description}

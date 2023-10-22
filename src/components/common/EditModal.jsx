@@ -8,7 +8,6 @@ import { utilityFunctions } from "../../assets/functions";
 import { InputGroup, ListGroup, ListGroupItem, Form } from "react-bootstrap";
 import { OptionSelection } from "./OptionSelection";
 
-// "Content-Type": "application/json",
 
 export default function EditModal({
   dataEndpoint = "",

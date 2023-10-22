@@ -116,8 +116,14 @@ export function Pagination({
       // Add a new record
       setItems([newItem, ...items]);
     } else if (state < 0) {
-      // Deleted Record
-      setItems((itms) => itms.filter((i) => i[itemsPrimaryKey] !== newItem));
+      // Deleted Record/s
+      if (Array.isArray(newItem)) {
+        setItems((itms) =>
+          itms.filter((i) => !newItem.includes(i[itemsPrimaryKey]))
+        );
+      } else {
+        setItems((itms) => itms.filter((i) => i[itemsPrimaryKey] !== newItem));
+      }
     } else {
       // Update the item
       setItems((itms) =>
@@ -262,7 +268,30 @@ export function Pagination({
                     </Dropdown.Item>
                   )}
                   {stagedItems.length > 1 && (
-                    <Dropdown.Item>Delete {modelName}s</Dropdown.Item>
+                    <Dropdown.Item>
+                      <DeleteComponent
+                        multiple={true}
+                        recordPrimaryKeys={stagedItems}
+                        {...{
+                          interceptDestruction: interceptDestruction
+                            ? (ids) => {
+                                if (
+                                  typeof interceptDestruction === "function"
+                                ) {
+                                  interceptDestruction(
+                                    ids,
+                                    normalCrudManipulator
+                                  );
+                                } else {
+                                  normalCrudManipulator(id, -1);
+                                }
+                              }
+                            : undefined,
+                        }}
+                        {...normalCrudManipulator}
+                        {...deleteProps}
+                      />
+                    </Dropdown.Item>
                   )}
                 </>
               )}

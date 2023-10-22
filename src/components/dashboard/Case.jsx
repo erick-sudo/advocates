@@ -12,6 +12,7 @@ import {
   faLocation,
   faMoneyCheckDollar,
   faPen,
+  faPencil,
   faPhone,
   faTasks,
   faUserAlt,
@@ -498,7 +499,7 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                   </div>
                 </div>
                 <div className="grid lg:grid-cols-2 gap-2 items-start">
-                  <div className="flex items-center rounded bg-white border-1 border-amber-800 px-2 py-4">
+                  <div className="flex items-center relative rounded bg-white border-1 border-amber-800 px-2 py-4">
                     <div className="text-2xl text-amber-800 h-12 w-12 flex items-center justify-center">
                       <FontAwesomeIcon icon={faDiceD6} />
                     </div>
@@ -507,9 +508,29 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                       <span className="text-amber-800 font-bold px-2">
                         {paymentInformation.total_fee}
                       </span>
+                      <div className="absolute shadow-md shadow-gray-700/10 hover:shadow-xl hover:shadow-gray-800/50 hover:scale-105 duration-300 rounded-lg px-2 py-1 right-2">
+                        <EditModal
+                          description="Change Total Fee"
+                          dataEndpoint={endpoints.cases.getPaymentInformation.replace(
+                            "<:caseId>",
+                            casey.id
+                          )}
+                          updateEndpoint={endpoints.cases.patchPaymentInformation.replace(
+                            "<:caseId>",
+                            casey.id
+                          )}
+                          editableFields={[{ name: "total_fee", as: "number" }]}
+                          anchorClassName="text-amber-800"
+                          anchorText="......."
+                          icon={<FontAwesomeIcon icon={faPencil} />}
+                          receiveNewRecord={(res) => {
+                            setPaymentInformation(res);
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center rounded bg-white border-1 border-amber-800 px-2 py-4">
+                  <div className="flex items-center relative rounded bg-white border-1 border-amber-800 px-2 py-4">
                     <div className="text-2xl text-amber-800 h-12 w-12 flex items-center justify-center">
                       <FontAwesomeIcon icon={faWallet} />
                     </div>
@@ -518,9 +539,39 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                       <span className="text-amber-800 font-bold px-2 uppercase">
                         {paymentInformation.payment_type}
                       </span>
+                      <div className="absolute shadow-md shadow-gray-700/10 hover:shadow-xl hover:shadow-gray-800/50 hover:scale-105 duration-300 rounded-lg px-2 py-1 right-2">
+                        <EditModal
+                          description="Change type of payment"
+                          dataEndpoint={endpoints.cases.getPaymentInformation.replace(
+                            "<:caseId>",
+                            casey.id
+                          )}
+                          updateEndpoint={endpoints.cases.patchPaymentInformation.replace(
+                            "<:caseId>",
+                            casey.id
+                          )}
+                          editableFields={[
+                            {
+                              name: "payment_type",
+                              as: "select",
+                              label: "Select Payment Type",
+                              options: [
+                                { label: "Full", value: "full" },
+                                { label: "Installment", value: "installment" },
+                              ],
+                            },
+                          ]}
+                          anchorClassName="text-amber-800"
+                          anchorText="......."
+                          icon={<FontAwesomeIcon icon={faPencil} />}
+                          receiveNewRecord={(res) => {
+                            setPaymentInformation(res);
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center rounded bg-white border-1 border-amber-800 px-2 py-4">
+                  <div className="flex items-center relative rounded bg-white border-1 border-amber-800 px-2 py-4">
                     <div className="text-2xl text-amber-800 h-12 w-12 flex items-center justify-center">
                       <FontAwesomeIcon icon={faMoneyCheck} />
                     </div>
@@ -529,9 +580,31 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                       <span className="text-amber-800 font-bold px-2">
                         {paymentInformation.balance_due}
                       </span>
+                      <div className="absolute shadow-md shadow-gray-700/10 hover:shadow-xl hover:shadow-gray-800/50 hover:scale-105 duration-300 rounded-lg px-2 py-1 right-2">
+                        <EditModal
+                          description="Change Due Balance"
+                          dataEndpoint={endpoints.cases.getPaymentInformation.replace(
+                            "<:caseId>",
+                            casey.id
+                          )}
+                          updateEndpoint={endpoints.cases.patchPaymentInformation.replace(
+                            "<:caseId>",
+                            casey.id
+                          )}
+                          editableFields={[
+                            { name: "balance_due", as: "number" },
+                          ]}
+                          anchorClassName="text-amber-800"
+                          anchorText="......."
+                          icon={<FontAwesomeIcon icon={faPencil} />}
+                          receiveNewRecord={(res) => {
+                            setPaymentInformation(res);
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center rounded bg-white border-1 border-amber-800 px-2 py-4">
+                  <div className="flex items-center relative rounded bg-white border-1 border-amber-800 px-2 py-4">
                     <div className="text-2xl text-amber-800 h-12 w-12 flex items-center justify-center">
                       <FontAwesomeIcon icon={faMoneyCheckDollar} />
                     </div>
@@ -540,6 +613,28 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                       <span className="text-amber-800 font-bold px-2">
                         {paymentInformation.paid_amount}
                       </span>
+                      <div className="absolute shadow-md shadow-gray-700/10 hover:shadow-xl hover:shadow-gray-800/50 hover:scale-105 duration-300 rounded-lg px-2 py-1 right-2">
+                        <EditModal
+                          description="Paid Amount"
+                          dataEndpoint={endpoints.cases.getPaymentInformation.replace(
+                            "<:caseId>",
+                            casey.id
+                          )}
+                          updateEndpoint={endpoints.cases.patchPaymentInformation.replace(
+                            "<:caseId>",
+                            casey.id
+                          )}
+                          editableFields={[
+                            { name: "paid_amount", as: "number" },
+                          ]}
+                          anchorClassName="text-amber-800"
+                          anchorText="......."
+                          icon={<FontAwesomeIcon icon={faPencil} />}
+                          receiveNewRecord={(res) => {
+                            setPaymentInformation(res);
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>

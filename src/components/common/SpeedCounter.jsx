@@ -7,7 +7,7 @@ export function SpeedCounter({ value = 0 }) {
     let val = 0;
 
     const interval = setInterval(() => {
-      val++;
+      val = val + Math.ceil(value/1000);
       if (val <= value) {
         setCount(val);
       } else {

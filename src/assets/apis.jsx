@@ -31,6 +31,7 @@ export const endpoints = {
     patchClient: `${baseUrl}/clients/<:clientId>/update`,
     getClient: `${baseUrl}/clients/<:clientId>/get`,
     deleteClient: `${baseUrl}/clients/<:clientId>/delete`,
+    bulkDestruction: `${baseUrl}/clients/destroy/multiple`
   },
   parties: {
     crud: `${baseUrl}/parties/<:id>`,
@@ -41,6 +42,7 @@ export const endpoints = {
   cases: {
     getCase: `${baseUrl}/cases/<:caseId>`,
     getPaymentInformation: `${baseUrl}/cases/<:caseId>/payment_information`,
+    patchPaymentInformation: `${baseUrl}/cases/<:caseId>/payment_information`,
     getImportantDates: `${baseUrl}/cases/<:caseId>/important_dates`,
     getHearings: `${baseUrl}/cases/<:caseId>/hearings`,
     getTasks: `${baseUrl}/cases/<:caseId>/tasks`,
@@ -51,10 +53,12 @@ export const endpoints = {
     addInstallment: `${baseUrl}/cases/<:caseId>/add_installment`,
     addParty: `${baseUrl}/cases/<:caseId>/add_party`,
     deleteCase: `${baseUrl}/cases/<:caseId>`,
+    bulkDestruction: `${baseUrl}/cases/destroy/multiple`
+
   },
   dash: {
     getCasesPerClient: `${baseUrl}/dashboard/cases/per/client`,
     getDashConuts: `${baseUrl}/dashboard/counts`,
-    getEnforcementCases: `${baseUrl}/dashboard/cases/enforcement`
+    getEnforcementCases: `${baseUrl}/dashboard/cases/enforcement`,
   },
 };

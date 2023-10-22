@@ -3,12 +3,12 @@ import { endpoints } from "../../assets/apis";
 import { apiCalls } from "../../assets/apiCalls";
 import { DataChart } from "../common/DataChart";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPrint, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faPrint } from "@fortawesome/free-solid-svg-icons";
 import { ModalLink } from "../common/ModalLink";
 import { utilityFunctions } from "../../assets/functions";
 import { StrokeText } from "../common/StrokeText";
 import { SpeedCounter } from "../common/SpeedCounter";
-import { Form, InputGroup, ListGroup, ListGroupItem } from "react-bootstrap";
+import { ListGroup, ListGroupItem } from "react-bootstrap";
 
 export function Dash() {
   const [casesPerClient, setCasesPerClient] = useState([]);
@@ -60,12 +60,12 @@ export function Dash() {
           ))}
         </div>
         <div className=" grid xl:grid-cols-2 p-4 gap-4 items-start">
-          <div className="p-2 shadow-md rounded  hover:scale-105 duration-300 hover:shadow-xl hover:shadow-gray-600/50">
+          <div className="p-2 shadow-md rounded  hover:scale-[1.02] duration-300 hover:shadow-xl hover:shadow-gray-600/50">
             <DataChart
               plot_data={{
                 title: (
                   <div className="flex items-center justify-between">
-                    <div>Number of Cases</div>
+                    <div>Case Distribution</div>
                     <ModalLink
                       submitText="PRINT"
                       description="Print"
@@ -138,19 +138,7 @@ export function Dash() {
           </div>
         </div>
       </div>
-      <ListGroup className="hidden min-w-[20rem] lg:block mr-2">
-        <ListGroupItem className="p-0 overflow-hidden">
-          <InputGroup className="border-none ">
-            <InputGroup.Text className="border-none rounded-none bg-amber-800 text-white">
-              <FontAwesomeIcon icon={faSearch} />
-            </InputGroup.Text>
-            <Form.Control className="border-none" placeholder="Search Clients/Cases" />
-          </InputGroup>
-        </ListGroupItem>
-        {
-          [1,2,3,4,5,6,7,8,9,10].map((r, idx) => (<ListGroupItem className="bg-gray-100 py-6" key={idx}></ListGroupItem>))
-        }
-      </ListGroup>
+      
     </div>
   );
 }

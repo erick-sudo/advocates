@@ -1,4 +1,3 @@
-import { Form } from "react-bootstrap";
 import { endpoints } from "../../assets/apis";
 import { Client, ClientDetails } from "./Client";
 import { Pagination } from "../common/Pagination";
@@ -6,17 +5,11 @@ import { useState } from "react";
 import { FormModal } from "../common/FormModal";
 import { apiCalls } from "../../assets/apiCalls";
 import { notifiers } from "../../assets/notifiers";
-import { PairView } from "./PairView";
-import { StrokeText } from "../common/StrokeText";
-import { NoResults } from "../common/NoResults";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHandPointer } from "@fortawesome/free-solid-svg-icons";
 import EditModal from "../common/EditModal";
 import { DeleteModal } from "../common/DeleteModal";
 
 export default function Clients({ setLoading }) {
   const [selectedClient, setSelectedClient] = useState(null);
-  const [brandNewClient, setBrandNewClient] = useState(null);
 
   const paginationConfig = {
     modelName: "Client",
@@ -133,23 +126,45 @@ export default function Clients({ setLoading }) {
     destroy: {
       DeleteComponent: DeleteModal,
       interceptDestruction: (payload, callback) => {
-        apiCalls.deleteRequest({
-          endpoint: endpoints.clients.deleteClient.replace(
-            "<:clientId>",
-            payload
-          ),
-          httpHeaders: {
-            Accept: "application/json",
-            Authorization: "Bearer " + sessionStorage.getItem("token"),
-          },
-          successCallback: (res) => {
-            callback(payload, -1);
-            notifiers.httpSuccess("Record Deleted");
-          },
-          errorCallback: (err) => {
-            notifiers.httpError(err);
-          },
-        });
+        setLoading(true);
+        if (Array.isArray(payload)) {
+          apiCalls.deleteRequest({
+            endpoint: endpoints.clients.bulkDestruction,
+            httpHeaders: {
+              Accept: "application/json",
+              Authorization: "Bearer " + sessionStorage.getItem("token"),
+              "Content-Type": "application/json",
+            },
+            httpBody: { client_ids: payload },
+            successCallback: (res) => {
+              setLoading(false);
+              callback(payload, -1);
+              notifiers.httpSuccess("Multiple Clients Deleted");
+            },
+            errorCallback: (res) => {
+              setLoading(false);
+              notifiers.httpError(err);
+            },
+          });
+        } else {
+          apiCalls.deleteRequest({
+            endpoint: endpoints.clients.deleteClient.replace(
+              "<:clientId>",
+              payload
+            ),
+            httpHeaders: {
+              Accept: "application/json",
+              Authorization: "Bearer " + sessionStorage.getItem("token"),
+            },
+            successCallback: (res) => {
+              callback(payload, -1);
+              notifiers.httpSuccess("Record Deleted");
+            },
+            errorCallback: (err) => {
+              notifiers.httpError(err);
+            },
+          });
+        }
       },
       deleteProps: {
         anchorText: "Delete Client",
@@ -158,13 +173,13 @@ export default function Clients({ setLoading }) {
         consequences: (
           <div className="text-sm">
             <h5 className="text-sm py-2 px-2 font-bold">
-              Deleting this Client has the following side effects
+              Deleting a Client has the following side effects
             </h5>
             <h4 className="px-4 text-gray-700 font-bold">
               The following information will be lost:
             </h4>
             <ul className="px-8 list-disc list-inside">
-              <li>All cases registered under this client</li>
+              <li>All cases registered under a client</li>
             </ul>
 
             {/* <div className="mx-auto flex justify-center">
