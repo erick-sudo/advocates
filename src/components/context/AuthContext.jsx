@@ -5,6 +5,7 @@ export const AuthContext = createContext({});
 export function AuthProvider({ children }) {
   const [userInfo, setUserInfo] = useState(null);
   const [expiredLogin, setExpiredLogin] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
 
   const logout = () => {
     setUserInfo(null);
@@ -18,6 +19,8 @@ export function AuthProvider({ children }) {
     expiredLogin,
     setExpiredLogin,
     logout,
+    darkMode,
+    setDarkMode
   };
 
   return (

@@ -1,15 +1,17 @@
 import { endpoints } from "../../assets/apis";
 import { Client, ClientDetails } from "./Client";
 import { Pagination } from "../common/Pagination";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FormModal } from "../common/FormModal";
 import { apiCalls } from "../../assets/apiCalls";
 import { notifiers } from "../../assets/notifiers";
 import EditModal from "../common/EditModal";
 import { DeleteModal } from "../common/DeleteModal";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Clients({ setLoading }) {
   const [selectedClient, setSelectedClient] = useState(null);
+  const { darkMode } = useContext(AuthContext);
 
   const paginationConfig = {
     modelName: "Client",
@@ -212,14 +214,15 @@ export default function Clients({ setLoading }) {
   };
 
   return (
-    <div className="bg-gray-100 py-4">
-      <div className="bg-gray-100 mx-2">
+    <div className="py-4">
+      <div className=" mx-2">
         <Pagination
           direction="vertical"
           selfVScroll={{
             vScroll: true,
-            vClasses: "p-2 max-h-[40vh]",
+            vClasses: "p-2 max-h-[50vh]",
           }}
+          parityClassName={darkMode ? "odd:bg-stone-950" : "odd:bg-gray-200"}
           paginationConfig={{ ...paginationConfig }}
           generalProps={{ setSelectedClient, selectedClient }}
           recordsHeader={

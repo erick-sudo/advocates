@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Background } from "../common/DottedBackground";
 import { capitalize } from "../../assets/functions";
 import { apiCalls } from "../../assets/apiCalls";
@@ -30,11 +30,13 @@ import { paymentMethods, paymentTypes } from "../../assets/data";
 import { DeleteModal } from "../common/DeleteModal";
 import { FormModal } from "../common/FormModal";
 import { Progress } from "../common/Progress";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Case({ casex, selectedCase, setSelectedCase }) {
+  const { darkMode } = useContext(AuthContext);
   return (
     <div
-      className={`relative group odd:bg-white hover:bg-amber-100 hover:font-bold duration-500 cursor-pointer flex items-center border-b border-amber-800/25`}
+      className={`relative group odd:text-bg-secondary duration-500 cursor-pointer flex items-center border-b border-amber-800/25`}
     >
       {selectedCase?.id === casex.id && (
         <div className="absolute  flex inset-0">
@@ -52,7 +54,13 @@ export default function Case({ casex, selectedCase, setSelectedCase }) {
           <div className="grid grid-cols-2 flex-grow break-all">
             <div className="z-20 px-2">
               <div className="flex flex-wrap items-center">
-                <span className="text-gray-600 font-bold">{casex.title}</span>
+                <span
+                  className={`${
+                    darkMode ? "text-gray-400" : "text-gray-700"
+                  } font-bold`}
+                >
+                  {casex.title}
+                </span>
 
                 <span
                   className={`mx-2 text-xs bg-amber-700 text-white rounded px-2`}
@@ -60,7 +68,11 @@ export default function Case({ casex, selectedCase, setSelectedCase }) {
                   {casex.status}
                 </span>
               </div>
-              <div className="text-gray-600">{casex.description}</div>
+              <div
+                className={`${darkMode ? "text-gray-200" : "text-gray-600"}`}
+              >
+                {casex.description}
+              </div>
             </div>
             <div className="z-20 px-2">
               <div>
@@ -97,6 +109,7 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
   const [casey, setCasey] = useState(casex);
   const [parties, setParties] = useState([]);
   const [users, setUsers] = useState([]);
+  const { darkMode } = useContext(AuthContext);
 
   useEffect(() => {
     setCasey(casex);
@@ -197,7 +210,7 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
         <div className="flex flex-col gap-8">
           <div>
             <div className="flex">
-              <div className="text-xl flex-grow font-bold text-amber-800 border-b px-2 border-amber-700/50">
+              <div className="text-xl flex-grow font-bold text-amber-700 border-b px-2 border-amber-700/50">
                 {casey.title}
               </div>
               <EditModal
@@ -275,9 +288,19 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
             </div>
           </div> */}
 
-          <div className="bg-gray-100 overflow-hidden rounded shadow-md">
-            <h4 className="text-lg bg-gray-200 py-2 px-4">Parties</h4>
-            <div className="flex bg-gray-200 border-t border-b border-amber-700/75">
+          <div className="pb-4 overflow-hidden rounded shadow-md shadow-black/50">
+            <h4
+              className={`text-lg ${
+                darkMode ? "bg-stone-900" : "bg-gray-200"
+              }  py-2 px-4`}
+            >
+              Parties
+            </h4>
+            <div
+              className={` ${
+                darkMode ? "bg-stone-900" : "bg-gray-200"
+              } flex border-t border-b border-amber-700/75`}
+            >
               <div className="w-1/3 flex items-center gap-2 px-1 py-2 justify-center border-r border-amber-700/75">
                 <FontAwesomeIcon icon={faUserAlt} /> Party Type
               </div>
@@ -286,19 +309,19 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                 Personal Details
               </div>
             </div>
-            <div className="min-h-[5vh]">
+            <div className="min-h-[5vh] border-b border-amber-700/75">
               {parties.map((party, index) => (
                 <div key={index} className="flex">
                   <div
                     className={`${
-                      (index + 0) % 2 === 0 && "bg-white"
+                      (index + 0) % 2 === 0 && (darkMode ? "bg-stone-900" : "bg-gray-200")
                     } w-1/3 flex items-center p-2 break-all justify-center border-r border-amber-700/75`}
                   >
                     {party.party_type}
                   </div>
                   <div
                     className={`w-2/3 grid ${
-                      (index + 1) % 2 === 0 && "bg-white"
+                      (index + 1) % 2 === 0 && (darkMode ? "bg-stone-900" : "bg-gray-200")
                     } p-2 lg:grid-cols-2`}
                   >
                     <div>
@@ -399,8 +422,14 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
             </div>
           </div>
 
-          <div className="bg-gray-100 overflow-hidden rounded shadow-md">
-            <h4 className="text-lg bg-gray-200 py-1 px-4">Assigned tasks</h4>
+          <div className="overflow-hidden rounded shadow-md shadow-black/50 pb-4">
+            <h4
+              className={`  ${
+                darkMode ? "bg-stone-900" : "bg-gray-200"
+              } text-lg  py-2 px-4`}
+            >
+              Assigned tasks
+            </h4>
             <div>
               {tasks.map((dt, index) => (
                 <div key={index}>Tasks</div>
@@ -439,8 +468,14 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
             </div>
           </div>
 
-          <div className="bg-gray-100 overflow-hidden rounded shadow-md">
-            <h4 className="text-lg bg-gray-200 py-2 px-4">Important Dates</h4>
+          <div className="overflow-hidden rounded shadow-md shadow-black/50 pb-4">
+            <h4
+              className={`text-lg  ${
+                darkMode ? "bg-stone-900" : "bg-gray-200"
+              } py-2 px-4`}
+            >
+              Important Dates
+            </h4>
             <div className="mb-2">
               {importantDates.map((dt, index) => (
                 <div key={index}>Dates</div>
@@ -475,12 +510,16 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
           </div>
 
           {paymentInformation?.id ? (
-            <div className="bg-gray-100 overflow-hidden rounded shadow-md">
-              <h4 className="text-lg bg-gray-200 py-2 px-4">
+            <div className="overflow-hidden rounded shadow-md shadow-black/50">
+              <h4
+                className={`text-lg  ${
+                  darkMode ? "bg-stone-900" : "bg-gray-200"
+                } py-2 px-4`}
+              >
                 Payment Information
               </h4>
               <div className="p-4 grid gap-4 md:grid-cols-2 items-start">
-                <div className="rounded bg-white border-1 border-amber-800 p-4">
+                <div className="rounded border-1 border-amber-800 p-4">
                   <div className="text-center pb-2">
                     Payment Completion status
                   </div>
@@ -489,7 +528,9 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                       width={20}
                       completeColor="rgb(120 53 15)"
                       incompleteColor="white"
-                      innerClassName="bg-gray-200 font-extrabold text-amber-800"
+                      innerClassName={`${
+                        darkMode ? "bg-stone-900" : ""
+                      } font-extrabold text-amber-800`}
                       percentage={
                         (parseFloat(paymentInformation.paid_amount) /
                           parseFloat(paymentInformation.total_fee)) *
@@ -499,7 +540,7 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                   </div>
                 </div>
                 <div className="grid lg:grid-cols-2 gap-2 items-start">
-                  <div className="flex items-center relative rounded bg-white border-1 border-amber-800 px-2 py-4">
+                  <div className="flex items-center relative rounded border-1 border-amber-800 px-2 py-4">
                     <div className="text-2xl text-amber-800 h-12 w-12 flex items-center justify-center">
                       <FontAwesomeIcon icon={faDiceD6} />
                     </div>
@@ -530,7 +571,7 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center relative rounded bg-white border-1 border-amber-800 px-2 py-4">
+                  <div className="flex items-center relative rounded border-1 border-amber-800 px-2 py-4">
                     <div className="text-2xl text-amber-800 h-12 w-12 flex items-center justify-center">
                       <FontAwesomeIcon icon={faWallet} />
                     </div>
@@ -571,7 +612,7 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center relative rounded bg-white border-1 border-amber-800 px-2 py-4">
+                  <div className="flex items-center relative rounded border-1 border-amber-800 px-2 py-4">
                     <div className="text-2xl text-amber-800 h-12 w-12 flex items-center justify-center">
                       <FontAwesomeIcon icon={faMoneyCheck} />
                     </div>
@@ -604,7 +645,7 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center relative rounded bg-white border-1 border-amber-800 px-2 py-4">
+                  <div className="flex items-center relative rounded border-1 border-amber-800 px-2 py-4">
                     <div className="text-2xl text-amber-800 h-12 w-12 flex items-center justify-center">
                       <FontAwesomeIcon icon={faMoneyCheckDollar} />
                     </div>
@@ -641,11 +682,11 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
               </div>
 
               {paymentInformation.payment_type !== "full" && (
-                <div className="p-2">
+                <div className="px-2 pb-4 ">
                   <div className="text-lg p-4 text-amber-800">
                     <div>Cummulative Payments</div>
                   </div>
-                  <div className="text-xs shadow-md shadow-white">
+                  <div className="text-xs pb-4">
                     <div className="flex border-b border-amber-800">
                       <div className="min-w-[12.5%] max-w-[12.5%] text-center px-1 truncate py-2 border-r border-amber-800"></div>
                       <div className="min-w-[25%] max-w-[25%] text-center px-1 truncate py-2 border-r border-amber-800">
@@ -662,7 +703,7 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                       </div>
                     </div>
                     <div className="grid">
-                      <div className="shadow">
+                      <div className={``}>
                         {paymentInformation?.cummulative_payments?.map(
                           (payment, index) => (
                             <div
@@ -673,8 +714,8 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                                 <div
                                   className={`${
                                     index % 2 === 0
-                                      ? "bg-white"
-                                      : "bg-gray-200 text-amber-900"
+                                      ? ""
+                                      : darkMode ? "text-amber-900 bg-stone-900" : "bg-gray-200"
                                   } min-w-[12.5%] max-w-[12.5%] px-1 font-bold flex items-center justify-center py-2 border-r border-amber-800`}
                                 >
                                   <div className="flex flex-wrap gap-2">
@@ -720,7 +761,7 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                                       anchorText=""
                                       description="Edit Payment Details"
                                       icon={<FontAwesomeIcon icon={faPen} />}
-                                      anchorClassName="border p-1 rounded box_shadow"
+                                      anchorClassName="p-1 rounded hover:bg-amber-800 hover:text-white duration-300"
                                     />
                                     <DeleteModal
                                       endpoint={endpoints.payments.crud.replace(
@@ -732,15 +773,15 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                                       }}
                                       anchorText=""
                                       description="Delete Payment"
-                                      anchorClassName="border p-1 rounded box_shadow"
+                                      anchorClassName="p-1 rounded hover:bg-amber-800 hover:text-white duration-300"
                                     />
                                   </div>
                                 </div>
                                 <div
                                   className={`${
                                     (index + 1) % 2 === 0
-                                      ? "bg-white"
-                                      : "bg-gray-200 text-amber-900"
+                                      ? ""
+                                      : darkMode ? "text-amber-900 bg-stone-900" : "bg-gray-200"
                                   } min-w-[25%] max-w-[25%] px-1 flex items-center justify-center py-2 border-r border-amber-800`}
                                 >
                                   {payment.amount}
@@ -748,8 +789,8 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                                 <div
                                   className={`${
                                     (index + 2) % 2 === 0
-                                      ? "bg-white"
-                                      : "bg-gray-200 text-amber-900"
+                                      ? ""
+                                      : darkMode ? "text-amber-900 bg-stone-900" : "bg-gray-200"
                                   } min-w-[12.5%] max-w-[12.5%] px-1 flex items-center justify-center py-2 border-r border-amber-800`}
                                 >
                                   {payment.payment_type}
@@ -757,8 +798,8 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                                 <div
                                   className={`${
                                     (index + 3) % 2 === 0
-                                      ? "bg-white"
-                                      : "bg-gray-200 text-amber-900"
+                                      ? ""
+                                      : darkMode ? "text-amber-900 bg-stone-900" : "bg-gray-200"
                                   } min-w-[25%] max-w-[25%] px-1 flex items-center justify-center py-2 border-r border-amber-800`}
                                 >
                                   {payment.payment_method}
@@ -766,8 +807,8 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                                 <div
                                   className={`${
                                     (index + 4) % 2 === 0
-                                      ? "bg-white"
-                                      : "bg-gray-200 text-amber-900"
+                                      ? ""
+                                      : darkMode ? "text-amber-900 bg-stone-900" : "bg-gray-200"
                                   } min-w-[25%] max-w-[25%] px-1 flex items-center justify-center py-2`}
                                 >
                                   {payment.created_at}

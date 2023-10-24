@@ -1,5 +1,6 @@
-import {} from "react";
+import { useContext } from "react";
 import { utilityFunctions } from "../../assets/functions";
+import { AuthContext } from "../context/AuthContext";
 
 export function PairView({
   fields = [],
@@ -8,12 +9,13 @@ export function PairView({
   wClassName = "",
   obj = {},
 }) {
+  const { darkMode } = useContext(AuthContext)
   return (
     <div className={wClassName}>
       {title && <h4 className={`${hClassName}`}>{title}</h4>}
       <div className="">
         {fields.map((field, index) => (
-          <div key={index} className="text-gray-700">
+          <div key={index} className={`${darkMode ? "text-gray-500" : "text-black"}`}>
             <div
               className={`flex ${
                 field.dir === "h" ? "flex-row" : "flex-col"

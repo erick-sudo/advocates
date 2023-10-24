@@ -6,12 +6,14 @@ import {
   faArrowDown,
   faArrowLeft,
   faArrowRight,
+  faHandPointer,
 } from "@fortawesome/free-solid-svg-icons";
 import { Background } from "./DottedBackground";
 import { Dna } from "react-loader-spinner";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { utilityFunctions } from "../../assets/functions";
 import { Dropdown } from "react-bootstrap";
+import { NoResults } from "./NoResults";
 
 export function Pagination({
   paginationConfig: {
@@ -44,6 +46,7 @@ export function Pagination({
       searchFields: [],
     },
   },
+  parityClassName = "",
   items: [items, setItems] = useState([]),
   generalProps = {},
   direction = "vertical",
@@ -444,6 +447,7 @@ export function Pagination({
                     key={index}
                     index={index}
                     item={componentData}
+                    parityClassName={parityClassName}
                   >
                     <PaginationChild
                       className={`z-10 ${childClassName}`}
@@ -454,7 +458,7 @@ export function Pagination({
                   </Item>
                 ) : (
                   <PaginationChild
-                    className={`z-10 ${childClassName}`}
+                    className={`z-10 ${childClassName} ${parityClassName}`}
                     {...dt}
                     {...generalProps}
                     {...{ items, setItems }}
@@ -486,21 +490,36 @@ export function Pagination({
       </div>
 
       <div>
-        {typeof ChildDetails === "function" &&
-          items
-            .filter((item, index) =>
-              stagedItems.includes(
-                itemsPrimaryKey ? item[itemsPrimaryKey] : index
-              )
-            )
-            .map((item, idx) => (
-              <ChildDetails
-                normalCrudManipulator={normalCrudManipulator}
-                key={idx}
-                {...{ [dataKey]: item }}
-                {...detailsProps}
-              />
-            ))}
+        {stagedItems.length > 0 ? (
+          <div>
+            {typeof ChildDetails === "function" &&
+              items
+                .filter((item, index) =>
+                  stagedItems.includes(
+                    itemsPrimaryKey ? item[itemsPrimaryKey] : index
+                  )
+                )
+                .map((item, idx) => (
+                  <ChildDetails
+                    normalCrudManipulator={normalCrudManipulator}
+                    key={idx}
+                    {...{ [dataKey]: item }}
+                    {...detailsProps}
+                  />
+                ))}
+          </div>
+        ) : (
+          <div>
+            <NoResults
+              content={
+                <h2 className="font-bold flex items-center gap-2">
+                  <FontAwesomeIcon icon={faHandPointer} />
+                  <span>Select {modelName}s above</span>
+                </h2>
+              }
+            />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -514,6 +533,7 @@ function Item({
   items,
   stagedItems,
   updateStagedItems,
+  parityClassName,
 }) {
   const [staged, setStaged] = useState(false);
 
@@ -530,7 +550,7 @@ function Item({
   }, [items]);
 
   return (
-    <div className="flex">
+    <div className={`flex ${parityClassName}`}>
       <div className="flex items-center justify-center min-w-[2.5rem] ">
         <input
           onChange={(e) => {
@@ -593,7 +613,7 @@ function PageBadges({
                   setNextPage(page);
                   triggerRefresh();
                 }}
-                className="px-2 box_shadow shadow-black/50 rounded bg-white text-amber-900 font-bold py-1"
+                className="px-2 box_shadow shadow-black/50 rounded text-amber-900 font-bold py-1"
               >
                 {page}
               </button>
@@ -616,7 +636,7 @@ function PageBadges({
                   triggerRefresh();
                 }
               }}
-              className="absolute right-[100%] -translate-x-4 px-2 min-w-[8rem] box_shadow shadow-black/50 rounded bg-white text-amber-900 font-bold py-1 hover:translate-y-2 duration-200"
+              className="absolute right-[100%] -translate-x-4 px-2 min-w-[8rem] box_shadow shadow-black/50 rounded text-amber-900 font-bold py-1 hover:translate-y-2 duration-200"
             >
               Previous
             </button>
@@ -646,7 +666,7 @@ function PageBadges({
                 triggerRefresh();
               }
             }}
-            className="px-2 box_shadow shadow-black/50 rounded bg-white text-amber-800 font-bold py-1 hover:translate-y-2 duration-200"
+            className="px-2 box_shadow shadow-black/50 rounded text-amber-800 font-bold py-1 hover:translate-y-2 duration-200"
           >
             <span className="">Go</span>
           </button>
@@ -659,7 +679,7 @@ function PageBadges({
                   triggerRefresh();
                 }
               }}
-              className="absolute left-[100%] translate-x-4 px-2 min-w-[8rem] box_shadow shadow-black/50 rounded bg-white text-amber-900 font-bold py-1 hover:translate-y-2 duration-200"
+              className="absolute left-[100%] translate-x-4 px-2 min-w-[8rem] box_shadow shadow-black/50 rounded text-amber-900 font-bold py-1 hover:translate-y-2 duration-200"
             >
               Next
             </button>
@@ -681,7 +701,7 @@ function PageBadges({
                   setNextPage(page);
                   triggerRefresh();
                 }}
-                className="px-2 box_shadow shadow-black/50 rounded bg-white text-amber-900 font-bold py-1"
+                className="px-2 box_shadow shadow-black/50 rounded text-amber-900 font-bold py-1"
               >
                 {page}
               </button>

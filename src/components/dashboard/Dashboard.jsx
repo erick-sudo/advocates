@@ -16,16 +16,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons/faBars";
 import {
   faClose,
-  faDashboard,
+  faFileExport,
   faFolder,
   faHome,
   faRightFromBracket,
-  faTools,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import Clients from "./Clients";
 import { Loader } from "../common/Loader";
 import { Dash } from "./Dash";
+import { FilterExport } from "./FilterExport";
+import { Card } from "react-bootstrap";
 
 export function Dashboard() {
   const { pathname } = useLocation();
@@ -33,7 +34,7 @@ export function Dashboard() {
   const navigate = useNavigate();
   const [handleSession] = useSession();
   const [loading, setLoading] = useState(false);
-  const { userInfo, setUserInfo, expiredLogin, logout } =
+  const { userInfo, setUserInfo, expiredLogin, logout, darkMode } =
     useContext(AuthContext);
 
   const tabs = [
@@ -55,11 +56,12 @@ export function Dashboard() {
       link: "/dashboard/clients",
       description: "Clients",
     },
-    // {
-    //   label: "Settings",
-    //   icon: faTools,
-    //   link: "/dashboard/settings",
-    // },
+    {
+      label: "Export",
+      icon: faFileExport,
+      link: "/dashboard/export",
+      description: "Export",
+    },
   ];
 
   useEffect(() => {
@@ -79,7 +81,11 @@ export function Dashboard() {
   }, [pathname]);
 
   return (
-    <div className="fixed inset-0 flex">
+    <Card
+      data-bs-theme={darkMode ? "dark" : "light"}
+      style={{ border: "none", borderRadius: "0" }}
+      className="fixed inset-0 flex"
+    >
       {userInfo && expiredLogin && (
         <Expired
           onCancel={() => {
@@ -98,19 +104,19 @@ export function Dashboard() {
             />
           </div>
           <div className="flex-grow flex">
-            <div className="flex flex-col shadow">
+            <div className="flex flex-col shadow-inner shadow-black">
               <div className="flex justify-end">
                 {!showNavBar ? (
                   <button
                     onClick={() => setShowNavBar(true)}
-                    className="bg-gray-100 h-10 w-10 shadow shadow-dark duration-300 hover:bg-amber-800 hover:text-white"
+                    className="h-10 w-10 shadow shadow-dark duration-300 hover:bg-amber-800 hover:text-white"
                   >
                     <FontAwesomeIcon icon={faBars} />
                   </button>
                 ) : (
                   <button
                     onClick={() => setShowNavBar(false)}
-                    className="bg-gray-100 h-8 w-8 shadow-md rounded-full shadow-black m-3 duration-300 hover:scale-125 hover:bg-amber-800 hover:text-white"
+                    className="h-8 w-8 shadow-md rounded-full shadow-black m-3 duration-300 hover:scale-125 hover:bg-amber-800 hover:text-white"
                   >
                     <FontAwesomeIcon icon={faClose} />
                   </button>
@@ -131,7 +137,7 @@ export function Dashboard() {
                       className={`h-10 border-b border-amber-800/50 flex items-center justify-center ${
                         tab.link === pathname
                           ? "bg-amber-800 text-white"
-                          : "bg-white text-amber-800"
+                          : "text-amber-700"
                       }`}
                       key={index}
                       to={tab.link}
@@ -146,7 +152,7 @@ export function Dashboard() {
                       className={`cursor-pointer hover:rotate-12 duration-300 mb-1  ${
                         tab.link === pathname
                           ? "bg-amber-800 text-white"
-                          : "bg-white text-amber-800"
+                          : "text-amber-700"
                       } pl-4 pr-12 py-2 text-start shadow-md shadow-black/50 w-full`}
                     >
                       {tab.description}
@@ -165,7 +171,7 @@ export function Dashboard() {
               ) : (
                 <div
                   onClick={logout}
-                  className="text-start px-4 py-2 text-amber-800 m-2 shadow-md cursor-pointer rounded-sm shadow-amber-800 bg-gray-100 hover:bg-amber-800 hover:text-white hover:-translate-y-2 duration-300"
+                  className="text-start px-4 py-2 text-amber-800 m-2 shadow-md cursor-pointer rounded-sm shadow-amber-800 hover:bg-amber-800 hover:text-white hover:-translate-y-2 duration-300"
                 >
                   Logout
                 </div>
@@ -180,6 +186,7 @@ export function Dashboard() {
                     path="clients"
                     element={<Clients {...{ setLoading }} />}
                   />
+                  <Route path="export" element={<FilterExport />} />
                 </Routes>
               </div>
             </div>
@@ -188,6 +195,6 @@ export function Dashboard() {
       ) : (
         <Login />
       )}
-    </div>
+    </Card>
   );
 }

@@ -2,26 +2,39 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { images } from "../../assets/images/images";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 
 export function DashNavBar({ currentPage = "Dashboard" }) {
-  const { userInfo, logout } = useContext(AuthContext);
+  const { userInfo, logout, darkMode, setDarkMode } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
   return (
     <div className="top-0 text-sm sticky z-50 flex p-2">
       <div className="flex-grow flex items-center gap-4">
-        <h4 className="text-xl text-amber-800 dancing italic">
+        <h4 className="text-xl text-amber-700 dancing italic">
           Kitonga Advocates
         </h4>
         <div className="flex-grow text-center text-2xl dancing italic">
           {currentPage}
         </div>
       </div>
+      <div className="flex items-center">
+        {darkMode ? (
+          <button onClick={() => setDarkMode(false)}>
+            <FontAwesomeIcon icon={faSun} />
+          </button>
+        ) : (
+          <button onClick={() => setDarkMode(true)}>
+            <FontAwesomeIcon icon={faMoon} />
+          </button>
+        )}
+      </div>
       <div className="group relative px-4 pb-2 cursor-pointer">
         <div className="flex items-center gap-4">
           <div className="flex gap-2 items-center">
-            <span className="text-amber-800">Welcome</span>
+            <span className="text-amber-700">Welcome</span>
             <span>{userInfo.name}</span>
           </div>
           <div className="h-10 w-10 border rounded-full overflow-hidden">
@@ -32,7 +45,11 @@ export function DashNavBar({ currentPage = "Dashboard" }) {
             />
           </div>
         </div>
-        <div className="hidden shadow-md rounded overflow-hidden shadow-black font-bold group-hover:block gap-2 absolute top-[100%] right-4 bg-white">
+        <div
+          className={`hidden shadow-md rounded overflow-hidden shadow-black font-bold group-hover:block gap-2 absolute top-[100%] right-4 ${
+            darkMode ? "bg-dark" : "bg-light"
+          }`}
+        >
           <button
             onClick={() => navigate("/dashboard/cases")}
             className="w-full hover:bg-amber-700 hover:text-white duration-200 text-start px-4 py-2"

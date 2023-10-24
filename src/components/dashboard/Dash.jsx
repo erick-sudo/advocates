@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { endpoints } from "../../assets/apis";
 import { apiCalls } from "../../assets/apiCalls";
 import { DataChart } from "../common/DataChart";
@@ -9,11 +9,13 @@ import { utilityFunctions } from "../../assets/functions";
 import { StrokeText } from "../common/StrokeText";
 import { SpeedCounter } from "../common/SpeedCounter";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { AuthContext } from "../context/AuthContext";
 
 export function Dash() {
   const [casesPerClient, setCasesPerClient] = useState([]);
   const [counts, setCounts] = useState({});
   const [enforcementCases, setEnforcementCases] = useState([]);
+  const { darkMode } = useContext(AuthContext);
 
   useEffect(() => {
     [
@@ -42,13 +44,17 @@ export function Dash() {
           {Object.keys(counts).map((c, i) => (
             <div
               key={i}
-              className="shadow-md py-4 rounded px-12 hover:scale-105 duration-300 hover:shadow-xl hover:shadow-gray-600/50"
+              className={`shadow-md py-4 rounded px-12 hover:scale-105 duration-300 ${
+                darkMode ? "shadow-black/50" : "shadow-gray-400/50"
+              } hover:shadow-xl hover:shadow-black/50`}
             >
               <div className="text-2xl font-bold">
                 {utilityFunctions.snakeCaseToTitleCase(c)}
               </div>
               <div className="text-4xl font-extrabold font-mono">
                 <StrokeText
+                  fillColor={`transparent`}
+                  strokeColor={`${darkMode ? "rgb(217 119 6)" : ""}`}
                   text={
                     <>
                       <SpeedCounter value={counts[c]} />
@@ -60,7 +66,9 @@ export function Dash() {
           ))}
         </div>
         <div className=" grid xl:grid-cols-2 p-4 gap-4 items-start">
-          <div className="p-2 shadow-md rounded  hover:scale-[1.02] duration-300 hover:shadow-xl hover:shadow-gray-600/50">
+          <div
+            className={`p-2 shadow-md ${darkMode ? "shadow-black bg-black/50" : ""} rounded duration-300 hover:shadow-xl hover:shadow-black/50`}
+          >
             <DataChart
               plot_data={{
                 title: (
@@ -70,7 +78,7 @@ export function Dash() {
                       submitText="PRINT"
                       description="Print"
                       anchorText=""
-                      anchorClassName="text-amber-800 p-2 rounded hover:bg-white hover:-translate-y-2 duration-300"
+                      anchorClassName="text-amber-800 p-2 rounded hover:bg-white hover:-translate-y-2 duration-300 shadow-md shadow-black"
                       icon={<FontAwesomeIcon icon={faPrint} />}
                     />
                   </div>
@@ -86,15 +94,33 @@ export function Dash() {
                   },
                   scales: {
                     x: {
+                      grid: {
+                        color: darkMode
+                          ? "rgb(217, 119, 6, .7)"
+                          : "rgb(0, 0, 0, .5)",
+                      },
                       title: {
                         display: true,
                         text: "Number of Cases",
+                        color: darkMode ? "rgb(245, 158, 11)" : "rgb(0, 0, 0)",
+                      },
+                      ticks: {
+                        color: darkMode ? "rgb(217, 119, 6)" : "",
                       },
                     },
                     y: {
+                      grid: {
+                        color: darkMode
+                          ? "rgb(217, 119, 6, .7)"
+                          : "rgb(0, 0, 0, .5)",
+                      },
                       title: {
                         display: true,
                         text: "Clients",
+                        color: darkMode ? "rgb(245, 158, 11)" : "rgb(0, 0, 0)",
+                      },
+                      ticks: {
+                        color: darkMode ? "rgb(217, 119, 6)" : "",
                       },
                     },
                   },
@@ -106,7 +132,9 @@ export function Dash() {
                       label: "Number of Cases",
                       data: sortedCasesPerClient.map((s) => s.cases),
                       borderColor: "rgb(146 64 14)",
-                      backgroundColor: "rgba(107, 114, 128, .7)",
+                      backgroundColor: darkMode
+                        ? "rgb(245, 158, 11, .8)"
+                        : "rgba(107, 114, 128, .7)",
                       fill: true,
                     },
                   ],
@@ -116,20 +144,44 @@ export function Dash() {
           </div>
           <div className="p-2">
             <h4 className="px-4 text-lg font-bold">Enforcement</h4>
-            <ListGroup className="shadow-md shadow-gray-700/50">
+            <ListGroup className="shadow-md shadow-amber-700">
               {enforcementCases.map((cs, idx) => (
-                <ListGroupItem className="border-amber-700/50" key={idx}>
-                  <div className="font-bold text-gray-700/75">{cs.title}</div>
+                <ListGroupItem className="border-amber-700/50 shadow-inner shadow-amber-700" key={idx}>
+                  <div
+                    className={`font-bold text-lg ${
+                      darkMode ? "text-gray-300" : "text-gray-700"
+                    }`}
+                  >
+                    {cs.title}
+                  </div>
                   <div className="">
-                    <span className="mr-2 font-bold text-amber-800/75">CN</span>
+                    <span
+                      className={`mr-2 font-bold ${
+                        darkMode ? "text-amber-600" : "text-amber-800/75"
+                      }`}
+                    >
+                      CN
+                    </span>
                     {cs.case_no_or_parties}
                   </div>
                   <div className="">
-                    <span className="mr-2 font-bold text-amber-800/75">FR</span>
+                    <span
+                      className={`mr-2 font-bold ${
+                        darkMode ? "text-amber-600" : "text-amber-800/75"
+                      }`}
+                    >
+                      FR
+                    </span>
                     {cs.file_reference}
                   </div>
                   <div className="">
-                    <span className="mr-2 font-bold text-amber-800/75">CR</span>
+                    <span
+                      className={`mr-2 font-bold ${
+                        darkMode ? "text-amber-600" : "text-amber-800/75"
+                      }`}
+                    >
+                      CR
+                    </span>
                     {cs.clients_reference}
                   </div>
                 </ListGroupItem>
@@ -138,7 +190,6 @@ export function Dash() {
           </div>
         </div>
       </div>
-      
     </div>
   );
 }

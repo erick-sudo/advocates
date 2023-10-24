@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { endpoints } from "../../assets/apis";
 import Case, { CaseDetails } from "./Case";
 import { Pagination } from "../common/Pagination";
@@ -7,11 +7,13 @@ import { notifiers } from "../../assets/notifiers";
 import { FormModal } from "../common/FormModal";
 import EditModal from "../common/EditModal";
 import { DeleteModal } from "../common/DeleteModal";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Cases({ setLoading }) {
   const [selectedCase, setSelectedCase] = useState(null);
   const [clients, setClients] = useState([]);
   const [cases, setCases] = useState([]);
+  const { darkMode } = useContext(AuthContext);
 
   const paginationConfig = {
     modelName: "Case",
@@ -258,14 +260,15 @@ export default function Cases({ setLoading }) {
 
   return (
     <div className="relative">
-      <div className="shadow-sm bg-gray-100 mx-2">
+      <div className="shadow-sm mx-2">
         <Pagination
           direction="vertical"
           selfVScroll={{
             vScroll: true,
-            vClasses: "p-2 max-h-[40vh]",
+            vClasses: "p-2 max-h-[50vh]",
           }}
           items={[cases, setCases]}
+          parityClassName={darkMode ? "odd:bg-stone-950" : "odd:bg-gray-200"}
           recordsHeader={
             <div className="flex items-center gap-2 text-xs font-bold p-2">
               <span className="w-8"></span>

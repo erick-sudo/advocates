@@ -1,5 +1,5 @@
-export const baseUrl = "https://advocate-ce23ad253984.herokuapp.com/api/v1";
-// export const baseUrl = "http://localhost:3000/api/v1";
+// export const baseUrl = "https://advocate-ce23ad253984.herokuapp.com/api/v1";
+export const baseUrl = "http://localhost:3000/api/v1";
 
 export const endpoints = {
   getAccessToken: `${baseUrl}/auth/access-token`,
@@ -21,6 +21,7 @@ export const endpoints = {
   },
   filter: {
     filterCases: `${baseUrl}/filter/cases/<:criteria>`,
+    filterClients: `${baseUrl}/filter/clients/<:criteria>`,
   },
   users: {
     getBriefUsers: `${baseUrl}/users/brief`,
