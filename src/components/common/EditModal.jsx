@@ -7,7 +7,7 @@ import { notifiers } from "../../assets/notifiers";
 import { utilityFunctions } from "../../assets/functions";
 import { InputGroup, ListGroup, ListGroupItem, Form } from "react-bootstrap";
 import { OptionSelection } from "./OptionSelection";
-
+import { ThreeDots } from "react-loader-spinner";
 
 export default function EditModal({
   dataEndpoint = "",
@@ -109,7 +109,8 @@ export default function EditModal({
             [...displayFields, ...editableFields.map((f) => f.name)].find(
               (field) => formData[field] === undefined
             )
-          ) && (
+          ) &&
+          (Object.keys(formData).length > 0) ? (
             <div className="grid gap-4">
               <div className="grid gap-2 shadow-sm p-2 rounded">
                 {displayFields.map((field, index) => (
@@ -179,6 +180,12 @@ export default function EditModal({
                     </InputGroup>
                   )
                 )}
+              </div>
+            </div>
+          ) : (
+            <div className="relative min-h-[10vh] flex justify-center items-center">
+              <div className="px-4 py-2 shadow-inner shadow-black rounded-lg">
+                <ThreeDots height={10} color="rgb(146 64 14)" />
               </div>
             </div>
           )

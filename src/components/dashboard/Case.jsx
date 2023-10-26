@@ -59,7 +59,7 @@ export default function Case({ casex, selectedCase, setSelectedCase }) {
                     darkMode ? "text-gray-400" : "text-gray-700"
                   } font-bold`}
                 >
-                  {casex.title}
+                  {casex.record}
                 </span>
 
                 <span
@@ -68,11 +68,11 @@ export default function Case({ casex, selectedCase, setSelectedCase }) {
                   {casex.status}
                 </span>
               </div>
-              <div
+              {/* <div
                 className={`${darkMode ? "text-gray-200" : "text-gray-600"}`}
               >
                 {casex.description}
-              </div>
+              </div> */}
             </div>
             <div className="z-20 px-2">
               <div>
@@ -209,9 +209,10 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
       {casey && (
         <div className="flex flex-col gap-8">
           <div>
-            <div className="flex">
+            <div className="flex items-end">
               <div className="text-xl flex-grow font-bold text-amber-700 border-b px-2 border-amber-700/50">
-                {casey.title}
+                {/* {casey.title} */}
+                {casey.case_no_or_parties}
               </div>
               <EditModal
                 receiveNewRecord={(res) => {
@@ -231,16 +232,16 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                   casey.id
                 )}
                 editableFields={[
-                  {
-                    name: "title",
-                    as: "text",
-                    required: true,
-                  },
-                  {
-                    name: "description",
-                    as: "textarea",
-                    required: true,
-                  },
+                  // {
+                  //   name: "title",
+                  //   as: "text",
+                  //   required: true,
+                  // },
+                  // {
+                  //   name: "description",
+                  //   as: "textarea",
+                  //   required: true,
+                  // },
                   {
                     name: "case_no_or_parties",
                     as: "text",
@@ -264,16 +265,24 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                 ]}
               />
             </div>
-            <div className="p-4">{casey.description}</div>
+            {/* <div className="p-4">{casey.description}</div> */}
+            <div className="pb-4">
+              <div className="px-2 font-bold">File Reference</div>
+              <div className="px-4">{casey.file_reference}</div>
+              <div className="px-2 font-bold">Clients Reference</div>
+              <div className="px-4">{casey.clients_reference}</div>
+              <div className="px-2 font-bold">Record</div>
+              <div className="px-4">{casey.record}</div>
+            </div>
             <div className="flex gap-4 px-4">
               <h3 className="flex gap-2 items-center">
                 <span className="font-bold text-amber-700">ID</span>
                 <span>{casey.id}</span>
               </h3>
-              <h4 className="flex gap-2">
+              {/* <h4 className="flex gap-2">
                 <span className="font-bold text-amber-700">Number</span>
                 <span>{casey.case_number}</span>
-              </h4>
+              </h4> */}
             </div>
           </div>
 
