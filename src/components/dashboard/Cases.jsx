@@ -188,10 +188,12 @@ export default function Cases({ setLoading }) {
               Authorization: "Bearer " + sessionStorage.getItem("token"),
             },
             successCallback: (res) => {
+              setLoading(false);
               callback(payload, -1);
               notifiers.httpSuccess("Case Deleted");
             },
             errorCallback: (err) => {
+              setLoading(false);
               notifiers.httpError(err);
             },
           });
@@ -206,7 +208,7 @@ export default function Cases({ setLoading }) {
             <h5 className="text-sm py-2 px-2 font-bold">
               Deleting a Case has the following side effects
             </h5>
-            <h4 className="px-4 text-gray-700 font-bold">
+            <h4 className="px-4 font-bold">
               The following information will be lost:
             </h4>
             <ul className="px-8 list-disc list-inside">

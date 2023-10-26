@@ -343,7 +343,7 @@ export function LandingPage() {
                         <FontAwesomeIcon icon={faQuoteLeft} />
                       </span>
                       <div className="pt-8 relative flex-grow">
-                        <div className="absolute top-0 bottom-[40%] overflow-hidden">
+                        <div className="absolute top-0 bottom-[40%] overflow-hidden font-bold text-white">
                           Aut excepturi esse. Nisi necessitatibus voluptate.
                           Nemo aut aperiam. Repellat maiores voluptatum. Nam
                           incidunt facilis. Itaque aperiam ea.Aut excepturi

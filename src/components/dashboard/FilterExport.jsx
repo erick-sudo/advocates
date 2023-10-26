@@ -3,6 +3,7 @@ import {
   faDownload,
   faFileCsv,
   faFileExcel,
+  faFolderBlank,
   faHandPointer,
   faSearch,
   faTrashCan,
@@ -208,6 +209,11 @@ function FilterMaster({
   };
 
   useEffect(() => {
+    setItems([]);
+    setResponseColumns([]);
+  }, [supportedFilterFields]);
+
+  useEffect(() => {
     setDataUrl("");
   }, [items]);
 
@@ -306,7 +312,7 @@ function FilterMaster({
                 className={`hover:shadow-lg hover:shadow-black/50 hover:scale-105 duration-200 border-amber-700 cursor-pointer px-3 py-1 rounded ${
                   matchFields.includes(f)
                     ? "bg-amber-800 text-white"
-                    : "shadow-md"
+                    : "shadow-inner shadow-black"
                 }`}
                 variant={matchFields.includes(f) ? "dark" : ""}
                 onClick={() => {
@@ -368,7 +374,7 @@ function FilterMaster({
                 className={`hover:shadow-lg hover:shadow-black/50 hover:scale-105 duration-200 border-amber-700 cursor-pointer px-3 py-1 rounded ${
                   responseColumns.includes(f)
                     ? "bg-amber-800 text-white"
-                    : "shadow-md"
+                    : "shadow-inner shadow-black"
                 }`}
                 data-bs-theme={responseColumns.includes(f) ? "dark" : ""}
                 onClick={() => {
@@ -472,8 +478,10 @@ function FilterMaster({
             <NoResults
               content={
                 <div>
-                  <h4 className="flex flex-col items-center">
-                    <Dna height={64} />
+                  <h4 className="flex flex-col items-center gap-2">
+                    <span className="text-xl">
+                      <FontAwesomeIcon icon={faFolderBlank} />
+                    </span>
                     <span className="font-bold">No results matched</span>
                   </h4>
                 </div>

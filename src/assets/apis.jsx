@@ -21,6 +21,7 @@ export const endpoints = {
   },
   filter: {
     filterCases: `${baseUrl}/filter/cases/<:criteria>`,
+    filterClientCases: `${baseUrl}/filter_pages/cases/<:criteria>/<:response>`,
     filterClients: `${baseUrl}/filter/clients/<:criteria>`,
   },
   users: {

@@ -9,6 +9,11 @@ import { DataChart } from "../common/DataChart";
 import { SpeedCounter } from "../common/SpeedCounter";
 import { StrokeText } from "../common/StrokeText";
 import { AuthContext } from "../context/AuthContext";
+import { Pagination } from "../common/Pagination";
+import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { utilityFunctions } from "../../assets/functions";
+import { faPencil } from "@fortawesome/free-solid-svg-icons";
+import EditModal from "../common/EditModal";
 
 export function Client({ client, selectedClient, setSelectedClient }) {
   const { darkMode } = useContext(AuthContext);
@@ -44,6 +49,42 @@ export function ClientDetails({ client = {} }) {
   const [casesStatusTally, setCasesStatusTally] = useState({});
   const { darkMode } = useContext(AuthContext);
 
+  const clientCasesPaginationConfig = {
+    modelName: "Client",
+    itemsPrimaryKey: "id",
+    paginationEndpoint: `${endpoints.filter.filterClientCases
+      .replace("<:criteria>", "strict")
+      .replace("<:response>", "data")}/`,
+    populationEndpoint: endpoints.filter.filterClientCases
+      .replace("<:criteria>", "strict")
+      .replace("<:response>", "count"),
+    paginationEndpointHttpMethod: "POST",
+    populationEndpointHttpMethod: "POST",
+    postEndpointPayload: {
+      response_columns: [
+        "id",
+        "case_no_or_parties",
+        "file_reference",
+        "clients_reference",
+        "record",
+        "balance_due",
+        "paid_amount",
+        "total_fee",
+        "deposit_pay",
+        "deposit_fees",
+        "final_fees",
+        "final_pay",
+        "deposit",
+      ],
+      match_columns: {
+        client_id: client.id,
+      },
+    },
+    itemsPerPage: 10,
+    componentName: CaseD,
+    dataKey: "casex",
+  };
+
   useEffect(() => {
     setCurrentClient(client);
     [
@@ -69,10 +110,16 @@ export function ClientDetails({ client = {} }) {
   sortedStatistics.sort((a, b) => b.count - a.count);
 
   return (
-    <div className="p-2 mt-8 mb-12 shadow-md shadow-black/50 mx-4 rounded-lg">
+    <div
+      className={`mt-8 mb-12 ${
+        darkMode
+          ? "shadow-inner shadow-black"
+          : "bg-gray-100 shadow-inner shadow-black"
+      }`}
+    >
       <h4 className="text-3xl px-4 pt-4 dancing">{client.name}</h4>
-      <div className="grid lg:grid-cols-2 gap-4 p-2 items-start">
-        <div className="shadow-md shadow-black/25 rounded px-4 grid gap-4 pb-8">
+      <div className="grid lg:grid-cols-2 gap-4 p-4 items-start">
+        <div className="shadow-inner shadow-black rounded px-4 grid gap-4 pb-8">
           <PairView
             title="Client Details"
             hClassName="text-center dancing text-lg font-bold border-b border-amber-800/50 py-2"
@@ -89,7 +136,7 @@ export function ClientDetails({ client = {} }) {
         </div>
 
         <div
-          className={`shadow-md shadow-black/25 rounded-lg ${
+          className={`shadow-inner shadow-black rounded-lg ${
             darkMode ? "bg-black/50" : ""
           } `}
         >
@@ -168,20 +215,20 @@ export function ClientDetails({ client = {} }) {
       {/* States */}
       <div>
         <h4 className="px-4 mt-4 text-xl dancing">Status Tally</h4>
-        <div className="p-2 grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 my-4">
+        <div className="p-4 grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 my-4">
           {sortedStatistics.map((s, i) => (
             <div
               key={i}
-              className={`border-amber-800/75  rounded-lg bg-gradient-to-r ${
+              className={`border-amber-800/75  rounded-lg overflow-hidden bg-gradient-to-r ${
                 darkMode
-                  ? "from-transparent via-black/50 shadow-xl shadow-black/50"
-                  : "from-gray-100 via-gray-100 to-white shadow-xl shadow-white"
+                  ? "from-transparent via-black/50 shadow-inner shadow-black"
+                  : "from-gray-100 via-gray-100 to-white shadow-inner shadow-black"
               } overflow-hidden`}
             >
               <div className="flex gap-2">
                 <div
-                  className={`text-3xl w-24 rounded-br-lg bg-gradient-to-r ${
-                    darkMode ? "via-black" : "from-white"
+                  className={`text-3xl w-24 rounded-tl-lg rounded-br-lg bg-gradient-to-br ${
+                    darkMode ? "via-black" : "from-transparent"
                   } text-gray-700/50 h-24 flex justify-center items-center shadow-md`}
                 >
                   <FontAwesomeIcon icon={s.icon} />
@@ -207,6 +254,156 @@ export function ClientDetails({ client = {} }) {
           ))}
         </div>
       </div>
+
+      {/* Client's Cases */}
+      <div className="my-8">
+        <h4
+          className={`px-4 py-2 border-y border-amber-700 text-xl ${
+            darkMode ? "" : ""
+          }`}
+        >
+          {client.name}'s Cases
+        </h4>
+        <div>
+          <Pagination
+            direction="vertical"
+            itemsClassName="grid gap-2"
+            recordsHeader={
+              <div className="top-0 sticky w-full z-20">
+                <ListGroup className="w-full" horizontal>
+                  {[
+                    "case_no_or_parties",
+                    "file_reference",
+                    "clients_reference",
+                    "record",
+                    "balance_due",
+                    "paid_amount",
+                    "total_fee",
+                    "deposit_pay",
+                    "deposit_fees",
+                    "final_fees",
+                    "final_pay",
+                    "deposit",
+                  ].map((c, i) => (
+                    <ListGroupItem
+                      variant="info"
+                      key={i}
+                      style={{
+                        minWidth: `${(1 / 7) * 100}%`,
+                        maxWidth: `${(1 / 7) * 100}%`,
+                        borderRadius: "0",
+                      }}
+                    >
+                      {utilityFunctions.snakeCaseToTitleCase(c)}
+                    </ListGroupItem>
+                  ))}
+                </ListGroup>
+              </div>
+            }
+            selfVScroll={{
+              vScroll: true,
+              vClasses: "px-2 pb-4 max-h-[70vh]",
+            }}
+            parityClassName={darkMode ? "odd:bg-stone-950" : "odd:bg-gray-200"}
+            paginationConfig={{ ...clientCasesPaginationConfig }}
+          />
+        </div>
+      </div>
     </div>
   );
 }
+
+const CaseD = ({ casex, items, setItems, primaryKey }) => {
+  const columns = [
+    "case_no_or_parties",
+    "file_reference",
+    "clients_reference",
+    "record",
+
+    "balance_due",
+    "paid_amount",
+    "total_fee",
+
+    "deposit_pay",
+    "deposit_fees",
+    "final_fees",
+    "final_pay",
+    "deposit",
+  ];
+
+  return (
+    <ListGroup className="w-full" horizontal>
+      {columns.map((c, i) => (
+        <ListGroupItem
+          className="relative group"
+          variant="success"
+          key={i}
+          style={{
+            minWidth: `${(1 / 7) * 100}%`,
+            maxWidth: `${(1 / 7) * 100}%`,
+            borderRadius: "0",
+          }}
+        >
+          {casex[c]}
+          <div className="absolute hidden group-hover:block bg-amber-800 hover:text-inherit hover:bg-black duration-300 rounded-tl-lg bottom-0 px-2 py-1 right-0">
+            {columns.slice(0, 4).includes(c) ? (
+              <EditModal
+                description={`Change ${utilityFunctions.snakeCaseToTitleCase(
+                  c
+                )}`}
+                dataEndpoint={endpoints.cases.getCase.replace(
+                  "<:caseId>",
+                  casex.id
+                )}
+                updateEndpoint={endpoints.cases.patchCase.replace(
+                  "<:caseId>",
+                  casex.id
+                )}
+                editableFields={[{ name: c, as: "text" }]}
+                anchorClassName="flex flex-row-reverse items-center text-white"
+                anchorText="..."
+                icon={<FontAwesomeIcon icon={faPencil} />}
+                receiveNewRecord={(res) => {
+                  setItems(
+                    items.map((itm) => {
+                      return itm.id === res.id
+                        ? { ...itm, [c]: res[c] }
+                        : itm;
+                    })
+                  );
+                }}
+              />
+            ) : (
+              <EditModal
+                description={`Change ${utilityFunctions.snakeCaseToTitleCase(
+                  c
+                )}`}
+                dataEndpoint={endpoints.cases.getPaymentInformation.replace(
+                  "<:caseId>",
+                  casex.id
+                )}
+                updateEndpoint={endpoints.cases.patchPaymentInformation.replace(
+                  "<:caseId>",
+                  casex.id
+                )}
+                editableFields={[{ name: c, as: "number" }]}
+                anchorClassName="flex flex-row-reverse items-center text-white"
+                anchorText="..."
+                icon={<FontAwesomeIcon icon={faPencil} />}
+                receiveNewRecord={(res) => {
+                  setItems(
+                    items.map((itm) => {
+                      return itm.id === res.case_id
+                        ? { ...itm, [c]: res[c] }
+                        : itm;
+                    })
+                  );
+                }}
+              />
+            )}
+          </div>
+        </ListGroupItem>
+      ))}
+    </ListGroup>
+  );
+};

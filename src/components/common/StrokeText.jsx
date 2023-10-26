@@ -10,7 +10,7 @@ export function StrokeText({
 
   useEffect(() => {
     divRef.current.style.webkitTextStroke = `${sz}px ${strokeColor}`
-  }, []);
+  }, [sz, text, fillColor, strokeColor]);
 
   return (
     <div

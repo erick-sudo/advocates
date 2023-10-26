@@ -60,7 +60,7 @@ export function FormModal({
               ) : field.as === "textarea" ? (
                 <ListGroup key={index}>
                   <ListGroupItem>
-                    <span className="text-gray-900/50 font-bold px-4">
+                    <span className="font-bold px-4">
                       {utilityFunctions.snakeCaseToTitleCase(field.name)}
                     </span>
                   </ListGroupItem>
@@ -85,12 +85,14 @@ export function FormModal({
                       direction: "rtl",
                     }}
                   >
-                    <div className="text-gray-900/50 font-bold w-full flex gap-2 flex-wrap">
+                    <div className="font-bold w-full flex gap-2 flex-wrap">
                       {utilityFunctions
                         .snakeCaseToTitleCase(field.name)
                         .split(" ")
                         .map((p, i) => (
-                          <span className="" key={i}>{p}</span>
+                          <span className="" key={i}>
+                            {p}
+                          </span>
                         ))}
                     </div>
                   </InputGroup.Text>

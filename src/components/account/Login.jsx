@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useLogin } from "../hooks/useLogin";
 import { useSession } from "../hooks/useSession";
@@ -6,17 +6,21 @@ import { InputField } from "../common/InputField";
 import { images } from "../../assets/images/images";
 import { Loader } from "../common/Loader";
 import { InputGroup, Form } from "react-bootstrap";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { AuthContext } from "../context/AuthContext";
 
 export function Login() {
   const [loginErrors, setLoginErrors] = useState();
   const [handleLogin] = useLogin();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    identity: "admin",
-    password: "password",
+    identity: "",
+    password: "",
     grant: "user",
   });
   const navigate = useNavigate();
+  const { darkMode } = useContext(AuthContext);
 
   const [handleSession] = useSession();
 
@@ -44,21 +48,25 @@ export function Login() {
   return (
     <div className="fixed inset-0 flex items-center justify-center">
       <div
-        className="absolute play-image inset-0 -z-10 blur-0"
+        className="absolute inset-0 -z-10 opacity-20 blur-0"
         style={{
           background: `url(${images.gavel}) center no-repeat`,
           backgroundSize: "cover",
         }}
       ></div>
-      <div className="rounded-lg text-sm shadow-lg relative shadow-white/75 bg-white/25 p-4">
+      <div
+        className={`rounded-lg text-sm shadow-inner relative ${
+          darkMode ? "shadow-black/50" : "shadow-black/75"
+        } p-4`}
+      >
         {loading && <Loader className="bg-white/50 z-50 rounded" />}
         <div className="py-2 px-4 sm:rounded-lg sm:px-10">
           <h2
             onClick={() => navigate("/")}
-            className="cursor-pointer text-left text-2xl font-bold"
+            className="cursor-pointer text-left flex gap-4 items-center justify-center mb-4 text-2xl font-bold"
           >
-            {/* <FontAwesomeIcon icon={faHomeLg} /> */}
-            <span className="relative text-amber-800">Login</span>
+            <FontAwesomeIcon icon={faHome} />
+            <span className="relative ">Login</span>
           </h2>
 
           <div className="flex items-center gap-2">
@@ -148,7 +156,7 @@ export function Login() {
             </div>
             <div className="mt-4 grid font-bold rounded-md">
               <button
-                className={`shadow hover:-translate-y-2 duration-300 hover:shadow-lg hover:shadow-black hover:bg-amber-600 hover:text-white rounded-lg block px-8 py-3`}
+                className={`shadow-inner shadow-black/50 hover:-translate-y-2 duration-500 hover:shadow-xl hover:shadow-black/50 hover:bg-amber-600 hover:text-white rounded-lg block px-8 py-3`}
                 type="submit"
               >
                 Sign In

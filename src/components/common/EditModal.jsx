@@ -33,7 +33,9 @@ export default function EditModal({
           Accept: "application/json",
           Authorization: "Bearer " + sessionStorage.getItem("token"),
         },
-        successCallback: setFormData,
+        successCallback: (res) => {
+          setFormData(res);
+        },
         errorCallback: (err) => {
           notifiers.httpError(err);
         },
@@ -133,7 +135,7 @@ export default function EditModal({
                   ) : field.as === "textarea" ? (
                     <ListGroup key={index}>
                       <ListGroupItem>
-                        <span className="text-gray-900/50 font-bold px-4">
+                        <span className="font-bold px-4">
                           {utilityFunctions.snakeCaseToTitleCase(field.name)}
                         </span>
                       </ListGroupItem>
@@ -161,7 +163,7 @@ export default function EditModal({
                           direction: "rtl",
                         }}
                       >
-                        <span className="text-gray-900/50 font-bold">
+                        <span className="font-bold">
                           {utilityFunctions.snakeCaseToTitleCase(field.name)}
                         </span>
                       </InputGroup.Text>

@@ -35,7 +35,7 @@ export function DashNavBar({ currentPage = "Dashboard" }) {
         <div className="flex items-center gap-4">
           <div className="flex gap-2 items-center">
             <span className="text-amber-700">Welcome</span>
-            <span>{userInfo.name}</span>
+            <span className="font-bold">{userInfo?.name?.split(" ")[0]}</span>
           </div>
           <div className="h-10 w-10 border rounded-full overflow-hidden">
             <img

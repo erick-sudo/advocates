@@ -44,8 +44,8 @@ export function Dash() {
           {Object.keys(counts).map((c, i) => (
             <div
               key={i}
-              className={`shadow-md py-4 rounded px-12 hover:scale-105 duration-300 ${
-                darkMode ? "shadow-black/50" : "shadow-gray-400/50"
+              className={`shadow-inner py-4 rounded px-12 hover:scale-105 duration-300 ${
+                darkMode ? "shadow-black/50" : "shadow-black/50"
               } hover:shadow-xl hover:shadow-black/50`}
             >
               <div className="text-2xl font-bold">
@@ -54,7 +54,7 @@ export function Dash() {
               <div className="text-4xl font-extrabold font-mono">
                 <StrokeText
                   fillColor={`transparent`}
-                  strokeColor={`${darkMode ? "rgb(217 119 6)" : ""}`}
+                  strokeColor={`${darkMode ? "rgb(217 119 6)" : "black"}`}
                   text={
                     <>
                       <SpeedCounter value={counts[c]} />
@@ -67,7 +67,7 @@ export function Dash() {
         </div>
         <div className=" grid xl:grid-cols-2 p-4 gap-4 items-start">
           <div
-            className={`p-2 shadow-md ${darkMode ? "shadow-black bg-black/50" : ""} rounded duration-300 hover:shadow-xl hover:shadow-black/50`}
+            className={`p-2 shadow-inner ${darkMode ? "shadow-black bg-black/50" : "shadow-black"} rounded duration-300 hover:shadow-xl hover:shadow-black/50`}
           >
             <DataChart
               plot_data={{

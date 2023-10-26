@@ -19,7 +19,10 @@ export function Pagination({
   paginationConfig: {
     modelName = "Record",
     paginationEndpoint,
+    paginationEndpointHttpMethod,
     populationEndpoint,
+    populationEndpointHttpMethod,
+    postEndpointPayload = {},
     itemsPerPage = 4,
     itemsPrimaryKey,
     componentName,
@@ -47,6 +50,7 @@ export function Pagination({
     },
   },
   parityClassName = "",
+  itemsClassName = "",
   items: [items, setItems] = useState([]),
   generalProps = {},
   direction = "vertical",
@@ -94,6 +98,9 @@ export function Pagination({
     handlePagination({
       paginationEndpoint: endpoint.data,
       populationEndpoint: endpoint.count,
+      paginationEndpointHttpMethod,
+      populationEndpointHttpMethod,
+      payload: postEndpointPayload,
       pageNumber: n,
       pagePopulation: s,
       errorCallback: (error) => {},
@@ -217,7 +224,7 @@ export function Pagination({
         behavior: "smooth",
       });
     }
-  }, [refresher, endpoint]);
+  }, [refresher, endpoint, paginationEndpoint, populationEndpoint]);
 
   return (
     <div className="border-1 border-transparent">
@@ -236,7 +243,7 @@ export function Pagination({
           />
         )}
 
-        <Dropdown>
+        { (typeof DeleteComponent === "function" || typeof UpdateComponent === "function"  ) && <Dropdown>
           <Dropdown.Toggle className="text-bg-dark px-4" variant="dark">
             {stagedItems.length > 0 ? "Actions" : `Select ${modelName}`}
           </Dropdown.Toggle>
@@ -335,7 +342,7 @@ export function Pagination({
               )}
             </Dropdown.Menu>
           )}
-        </Dropdown>
+        </Dropdown>}
       </div>
       {support && searchFields?.length > 0 && (
         <form onSubmit={handleSearch} className="flex-grow px-4 py-2">
@@ -372,7 +379,6 @@ export function Pagination({
           </div>
         </form>
       )}
-      {recordsHeader}
       <div className="relative">
         {items.length > 0 && direction !== "vertical" && (
           <ScaleButton
@@ -382,7 +388,7 @@ export function Pagination({
                 behavior: "smooth",
               });
             }}
-            className={`absolute z-40 top-[50%] left-1 bg-gray-100 hover:bg-yellow-600 hover:text-white`}
+            className={`absolute z-40 top-[50%] left-1 hover:bg-yellow-600 hover:text-white`}
             text={<FontAwesomeIcon icon={faArrowLeft} />}
           />
         )}
@@ -395,7 +401,7 @@ export function Pagination({
                 behavior: "smooth",
               });
             }}
-            className={`absolute z-40 top-[50%] right-1 bg-gray-100 hover:bg-yellow-600 hover:text-white`}
+            className={`absolute z-40 top-[50%] right-1 hover:bg-yellow-600 hover:text-white`}
             text={<FontAwesomeIcon icon={faArrowRight} />}
           />
         )}
@@ -408,7 +414,7 @@ export function Pagination({
               onClick={() => {
                 triggerRefresh();
               }}
-              className={`bg-gray-100 hover:bg-yellow-600 hover:text-white`}
+              className={`hover:bg-amber-800 shadow-md shadow-gray-500  hover:text-white`}
               text={<FontAwesomeIcon icon={faArrowDown} />}
             />
           </div>
@@ -429,9 +435,10 @@ export function Pagination({
             className={`${
               direction === "vertical"
                 ? "flex flex-col flex-grow w-full"
-                : "flex p-4"
-            }`}
+                : "flex"
+            } ${itemsClassName}`}
           >
+            {recordsHeader}
             {items.length > 0 ? (
               items.map((componentData, index) => {
                 const dt = { [dataKey]: componentData };
@@ -449,21 +456,25 @@ export function Pagination({
                     item={componentData}
                     parityClassName={parityClassName}
                   >
+                    {typeof componentName === "function" && (
+                      <PaginationChild
+                        className={`z-10 ${childClassName}`}
+                        {...dt}
+                        {...generalProps}
+                        {...{ items, setItems }}
+                      />
+                    )}
+                  </Item>
+                ) : (
+                  typeof componentName === "function" && (
                     <PaginationChild
-                      className={`z-10 ${childClassName}`}
+                      className={`z-10 ${childClassName} ${parityClassName}`}
                       {...dt}
                       {...generalProps}
                       {...{ items, setItems }}
+                      key={index}
                     />
-                  </Item>
-                ) : (
-                  <PaginationChild
-                    className={`z-10 ${childClassName} ${parityClassName}`}
-                    {...dt}
-                    {...generalProps}
-                    {...{ items, setItems }}
-                    key={index}
-                  />
+                  )
                 );
               })
             ) : (
@@ -489,38 +500,40 @@ export function Pagination({
         />
       </div>
 
-      <div>
-        {stagedItems.length > 0 ? (
-          <div>
-            {typeof ChildDetails === "function" &&
-              items
-                .filter((item, index) =>
-                  stagedItems.includes(
-                    itemsPrimaryKey ? item[itemsPrimaryKey] : index
+      {typeof detailsComponent === "function" && (
+        <div>
+          {stagedItems.length > 0 ? (
+            <div>
+              {typeof ChildDetails === "function" &&
+                items
+                  .filter((item, index) =>
+                    stagedItems.includes(
+                      itemsPrimaryKey ? item[itemsPrimaryKey] : index
+                    )
                   )
-                )
-                .map((item, idx) => (
-                  <ChildDetails
-                    normalCrudManipulator={normalCrudManipulator}
-                    key={idx}
-                    {...{ [dataKey]: item }}
-                    {...detailsProps}
-                  />
-                ))}
-          </div>
-        ) : (
-          <div>
-            <NoResults
-              content={
-                <h2 className="font-bold flex items-center gap-2">
-                  <FontAwesomeIcon icon={faHandPointer} />
-                  <span>Select {modelName}s above</span>
-                </h2>
-              }
-            />
-          </div>
-        )}
-      </div>
+                  .map((item, idx) => (
+                    <ChildDetails
+                      normalCrudManipulator={normalCrudManipulator}
+                      key={idx}
+                      {...{ [dataKey]: item }}
+                      {...detailsProps}
+                    />
+                  ))}
+            </div>
+          ) : (
+            <div>
+              <NoResults
+                content={
+                  <h2 className="font-bold flex items-center gap-2">
+                    <FontAwesomeIcon icon={faHandPointer} />
+                    <span>Select {modelName}s above</span>
+                  </h2>
+                }
+              />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

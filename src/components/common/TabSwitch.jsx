@@ -13,8 +13,8 @@ export function TabSwitch({ options = [], darkMode }) {
                 key={idx}
                 onClick={() => setCurrent(idx)}
                 className={`font-bold ${
-                  idx === current ? "bg-yellow-800 text-white" : darkMode ? "shadow-black/50 hover:shadow-gray-600/50" : "shadow-black/25 hover:shadow-black/50"
-                } rounded shadow-md whitespace-nowrap px-4 py-2 first-letter:uppercase duration-200 hover:-translate-y-2 hover:shadow-lg`}
+                  idx === current ? "bg-yellow-800 text-white" : darkMode ? "shadow-black hover:shadow-gray-600/50" : "shadow-black hover:shadow-black/50"
+                } rounded shadow-inner whitespace-nowrap px-4 py-2 first-letter:uppercase duration-200 hover:-translate-y-2 hover:shadow-lg`}
               >
                 {option.name}
               </button>

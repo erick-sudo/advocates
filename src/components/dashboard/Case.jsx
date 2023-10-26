@@ -288,19 +288,9 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
             </div>
           </div> */}
 
-          <div className="pb-4 overflow-hidden rounded shadow-md shadow-black/50">
-            <h4
-              className={`text-lg ${
-                darkMode ? "bg-stone-900" : "bg-gray-200"
-              }  py-2 px-4`}
-            >
-              Parties
-            </h4>
-            <div
-              className={` ${
-                darkMode ? "bg-stone-900" : "bg-gray-200"
-              } flex border-t border-b border-amber-700/75`}
-            >
+          <div className="pb-4 overflow-hidden rounded shadow-inner shadow-black">
+            <h4 className={`text-lg py-2 px-4`}>Parties</h4>
+            <div className={`flex border-t border-b border-amber-700/75`}>
               <div className="w-1/3 flex items-center gap-2 px-1 py-2 justify-center border-r border-amber-700/75">
                 <FontAwesomeIcon icon={faUserAlt} /> Party Type
               </div>
@@ -314,14 +304,16 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                 <div key={index} className="flex">
                   <div
                     className={`${
-                      (index + 0) % 2 === 0 && (darkMode ? "bg-stone-900" : "bg-gray-200")
+                      (index + 0) % 2 === 0 &&
+                      (darkMode ? "bg-stone-900" : "bg-gray-200")
                     } w-1/3 flex items-center p-2 break-all justify-center border-r border-amber-700/75`}
                   >
                     {party.party_type}
                   </div>
                   <div
                     className={`w-2/3 grid ${
-                      (index + 1) % 2 === 0 && (darkMode ? "bg-stone-900" : "bg-gray-200")
+                      (index + 1) % 2 === 0 &&
+                      (darkMode ? "bg-stone-900" : "bg-gray-200")
                     } p-2 lg:grid-cols-2`}
                   >
                     <div>
@@ -422,14 +414,8 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded shadow-md shadow-black/50 pb-4">
-            <h4
-              className={`  ${
-                darkMode ? "bg-stone-900" : "bg-gray-200"
-              } text-lg  py-2 px-4`}
-            >
-              Assigned tasks
-            </h4>
+          <div className="overflow-hidden rounded shadow-inner shadow-black pb-4">
+            <h4 className={` text-lg py-2 px-4`}>Assigned tasks</h4>
             <div>
               {tasks.map((dt, index) => (
                 <div key={index}>Tasks</div>
@@ -468,14 +454,8 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded shadow-md shadow-black/50 pb-4">
-            <h4
-              className={`text-lg  ${
-                darkMode ? "bg-stone-900" : "bg-gray-200"
-              } py-2 px-4`}
-            >
-              Important Dates
-            </h4>
+          <div className="overflow-hidden rounded shadow-inner shadow-black pb-4">
+            <h4 className={`text-lg py-2 px-4`}>Important Dates</h4>
             <div className="mb-2">
               {importantDates.map((dt, index) => (
                 <div key={index}>Dates</div>
@@ -484,7 +464,7 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
             <div className="px-4 pt-3 pb-2">
               <FormModal
                 onSubmit={(payload) => {
-                  console.log(payload);
+                  //console.log(payload);
                 }}
                 inputFields={[
                   {
@@ -510,14 +490,8 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
           </div>
 
           {paymentInformation?.id ? (
-            <div className="overflow-hidden rounded shadow-md shadow-black/50">
-              <h4
-                className={`text-lg  ${
-                  darkMode ? "bg-stone-900" : "bg-gray-200"
-                } py-2 px-4`}
-              >
-                Payment Information
-              </h4>
+            <div className="overflow-hidden rounded shadow-inner shadow-black">
+              <h4 className={`text-lg py-2 px-4`}>Payment Information</h4>
               <div className="p-4 grid gap-4 md:grid-cols-2 items-start">
                 <div className="rounded border-1 border-amber-800 p-4">
                   <div className="text-center pb-2">
@@ -715,7 +689,9 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                                   className={`${
                                     index % 2 === 0
                                       ? ""
-                                      : darkMode ? "text-amber-900 bg-stone-900" : "bg-gray-200"
+                                      : darkMode
+                                      ? "text-amber-900 bg-stone-900"
+                                      : "bg-gray-200"
                                   } min-w-[12.5%] max-w-[12.5%] px-1 font-bold flex items-center justify-center py-2 border-r border-amber-800`}
                                 >
                                   <div className="flex flex-wrap gap-2">
@@ -781,7 +757,9 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                                   className={`${
                                     (index + 1) % 2 === 0
                                       ? ""
-                                      : darkMode ? "text-amber-900 bg-stone-900" : "bg-gray-200"
+                                      : darkMode
+                                      ? "text-amber-900 bg-stone-900"
+                                      : "bg-gray-200"
                                   } min-w-[25%] max-w-[25%] px-1 flex items-center justify-center py-2 border-r border-amber-800`}
                                 >
                                   {payment.amount}
@@ -790,7 +768,9 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                                   className={`${
                                     (index + 2) % 2 === 0
                                       ? ""
-                                      : darkMode ? "text-amber-900 bg-stone-900" : "bg-gray-200"
+                                      : darkMode
+                                      ? "text-amber-900 bg-stone-900"
+                                      : "bg-gray-200"
                                   } min-w-[12.5%] max-w-[12.5%] px-1 flex items-center justify-center py-2 border-r border-amber-800`}
                                 >
                                   {payment.payment_type}
@@ -799,7 +779,9 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                                   className={`${
                                     (index + 3) % 2 === 0
                                       ? ""
-                                      : darkMode ? "text-amber-900 bg-stone-900" : "bg-gray-200"
+                                      : darkMode
+                                      ? "text-amber-900 bg-stone-900"
+                                      : "bg-gray-200"
                                   } min-w-[25%] max-w-[25%] px-1 flex items-center justify-center py-2 border-r border-amber-800`}
                                 >
                                   {payment.payment_method}
@@ -808,7 +790,9 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                                   className={`${
                                     (index + 4) % 2 === 0
                                       ? ""
-                                      : darkMode ? "text-amber-900 bg-stone-900" : "bg-gray-200"
+                                      : darkMode
+                                      ? "text-amber-900 bg-stone-900"
+                                      : "bg-gray-200"
                                   } min-w-[25%] max-w-[25%] px-1 flex items-center justify-center py-2`}
                                 >
                                   {payment.created_at}
@@ -1009,19 +993,19 @@ function AddInstallment({ id, title, description, addInstallment }) {
         <div className="grid gap-3">
           <h4 className="flex gap-4">
             <span>Case ID</span>
-            <span className="bg-gray-200 px-4 py-1 rounded font-bold">
-              {id}
-            </span>
+            <span className="px-4 py-1 rounded font-bold">{id}</span>
           </h4>
-          <h4 className="dancing text-2xl border-b">Case</h4>
-          <div className="text-gray-700/75 italic text-xl px-2 font-bold">
+          <h4 className="dancing text-2xl border-b border-amber-700 text-amber-700">
+            Case
+          </h4>
+          <div className="text-gray-500 italic text-xl px-2 font-bold">
             {title}
           </div>
-          <div className="text-gray-600 px-8">{description}</div>
+          <div className="text-gray-400 px-8">{description}</div>
 
           <InputGroup>
             <InputGroup.Text style={{}}>
-              <span className="text-gray-700/75 font-bold">Installment</span>
+              <span className="font-bold">Installment</span>
             </InputGroup.Text>
             <Form.Control
               className="outline-none px-4 py-2 flex-grow border rounded-r"
@@ -1108,7 +1092,7 @@ function Payment({ updatePayment }) {
             </ListGroupItem>
             <ListGroupItem className="p-0">
               <input
-                className="outline-none px-4 py-2 rounded"
+                className="outline-none px-4 py-2 w-full rounded-none bg-transparent"
                 style={{ border: "none" }}
                 onChange={() => {}}
                 value={(payment?.payment_method || "").toUpperCase()}
@@ -1145,7 +1129,7 @@ function Payment({ updatePayment }) {
             </ListGroupItem>
             <ListGroupItem className="p-0">
               <input
-                className="outline-none px-4 py-2 rounded"
+                className="outline-none px-4 py-2 w-full rounded-none bg-transparent"
                 style={{ border: "none" }}
                 onChange={() => {}}
                 value={(payment?.payment_type || "").toUpperCase()}

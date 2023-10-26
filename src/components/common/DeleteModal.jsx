@@ -51,7 +51,7 @@ export function DeleteModal({
     <div>
       <ModalLink
         anchorClassName={anchorClassName}
-        submitButtonClassName="bg-red-800 text-white hover:bg-red-600"
+        submitButtonClassName="bg-red-800 hover:bg-red-600 text-white"
         cancelButtonClassName="bg-amber-600 text-white"
         cancelText="No"
         anchorText={anchorText + "" + (multiple ? "s" : "")}
@@ -60,7 +60,7 @@ export function DeleteModal({
         description={description}
         submitData={handleSubmit}
         modalContent={
-          <div>
+          <div className="">
             <div className="flex gap-2 items-center font-bold text-red-600">
               <span className="text-[4em]">
                 <FontAwesomeIcon icon={faWarning} />

@@ -13,7 +13,7 @@ export function OptionSelection({
       <ListGroupItem className="p-0" style={{ overflow: "hidden" }}>
         <InputGroup>
           <InputGroup.Text style={{ border: "none" }}>
-            <span className="text-gray-700/75 font-bold">{label}</span>
+            <span className="font-bold">{label}</span>
           </InputGroup.Text>
           <Form.Select
             style={{ border: "none", borderRadius: 0 }}
@@ -32,7 +32,7 @@ export function OptionSelection({
       </ListGroupItem>
       <ListGroupItem className="p-0">
         <input
-          className="outline-none px-4 py-2 rounded"
+          className="outline-none px-4 py-2 bg-transparent w-full"
           style={{ border: "none" }}
           onChange={() => {}}
           value={(value || "").toUpperCase()}
