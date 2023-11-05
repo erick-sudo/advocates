@@ -1,4 +1,4 @@
-export const baseUrl = "https://quiet-retreat-99412-bbc3b2d64ad6.herokuapp.com/api/v1";
+export const baseUrl = "https://quiet-retreat-99412-bdf8c48d69d3.herokuapp.com/api/v1";
 // export const baseUrl = "http://localhost:3000/api/v1";
 
 export const endpoints = {

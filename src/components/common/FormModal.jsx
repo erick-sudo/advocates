@@ -81,11 +81,10 @@ export function FormModal({
                   <InputGroup.Text
                     style={{
                       maxWidth: "40%",
-                      minWidth: "40%",
-                      direction: "rtl",
+                      minWidth: "40%"
                     }}
                   >
-                    <div className="font-bold w-full flex gap-2 flex-wrap">
+                    <div className="font-bold w-full flex gap-2 flex-wrap justify-end">
                       {utilityFunctions
                         .snakeCaseToTitleCase(field.name)
                         .split(" ")
