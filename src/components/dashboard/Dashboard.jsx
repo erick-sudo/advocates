@@ -41,25 +41,25 @@ export function Dashboard() {
     {
       label: "",
       icon: faHome,
-      link: "/dashboard",
+      link: "/",
       description: "Home",
     },
     {
       label: "Cases",
       icon: faFolder,
-      link: "/dashboard/cases",
+      link: "/cases",
       description: "Cases",
     },
     {
       label: "Clients",
       icon: faUser,
-      link: "/dashboard/clients",
+      link: "/clients",
       description: "Clients",
     },
     {
       label: "Export",
       icon: faFileExport,
-      link: "/dashboard/export",
+      link: "/export",
       description: "Export",
     },
   ];

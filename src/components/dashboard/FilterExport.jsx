@@ -10,7 +10,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { InputGroup, Form, ListGroup, ListGroupItem } from "react-bootstrap";
 import { NoResults } from "../common/NoResults";
-import { Dna } from "react-loader-spinner";
 import { array2d, csvString, utilityFunctions } from "../../assets/functions";
 import { notifiers } from "../../assets/notifiers";
 import * as XLSX from "xlsx";
@@ -44,7 +43,7 @@ export function FilterExport() {
                     "clients_reference",
                     "record",
                     "total_fee",
-                    "balance_due",
+                    "outstanding",
                     "paid_amount",
                   ]}
                   filterEndpoint={endpoints.filter.filterCases}
@@ -123,7 +122,7 @@ function ExportClientCases() {
               "clients_reference",
               "record",
               "total_fee",
-              "balance_due",
+              "outstanding",
               "paid_amount",
             ]}
           />

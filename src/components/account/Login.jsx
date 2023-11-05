@@ -121,7 +121,7 @@ export function Login() {
                 required
                 name="identity"
                 colors={{
-                  success: "border-dark text-dark font-bold",
+                  success: `${darkMode ? "" : "border-dark text-dark"} font-bold`,
                   initial: "border-secondary text-secondary font-bold",
                   error: "border-danger text-danger font-bold",
                 }}
@@ -143,7 +143,7 @@ export function Login() {
                 required
                 name="password"
                 colors={{
-                  success: "border-dark text-dark font-bold",
+                  success: `${darkMode ? "" : "border-dark text-dark"} font-bold`,
                   initial: "border-secondary text-secondary font-bold",
                   error: "border-danger text-danger font-bold",
                 }}
@@ -165,7 +165,7 @@ export function Login() {
           </form>
           <div className="text-center flex mx-auto w-max mt-6 items-center gap-4">
             <span>Not registered..?</span>
-            <NavLink to="/signup" className="text-lg underline text-blue-600">
+            <NavLink className="text-lg underline text-blue-600">
               Sign Up
             </NavLink>
           </div>

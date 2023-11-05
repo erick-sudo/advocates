@@ -51,15 +51,8 @@ export function Progress({
       (canvasWrapper.current.offsetWidth / 85) * 100
     }%`;
 
-    circleProgress({
-      ctx: canvasRef.current.getContext("2d"),
-      start: 100,
-      strokeColor: incompleteColor,
-      radius: canvasRef.current.width / 2,
-    });
-
     const interval = setInterval(() => {
-      if (start > percentage) {
+      if (start > percentage || percentage == 100) {
         clear();
         return;
       }
@@ -70,12 +63,20 @@ export function Progress({
         .getContext("2d")
         .clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
+        circleProgress({
+          ctx: canvasRef.current.getContext("2d"),
+          start: 100,
+          strokeColor: incompleteColor,
+          radius: canvasRef.current.width / 2,
+        });
+
       circleProgress({
         ctx: canvasRef.current.getContext("2d"),
         start: start,
         strokeColor: completeColor,
         radius: canvasRef.current.width / 2,
       });
+      
 
       start += 0.1;
     }, 1);

@@ -43,6 +43,7 @@ export default function Cases({ setLoading }) {
             callback(res, 0);
           },
           errorCallback: (err) => {
+            console.log(err)
             notifiers.httpError(err.message);
             setLoading(false);
           },
@@ -50,16 +51,16 @@ export default function Cases({ setLoading }) {
       },
       newRecordProps: {
         inputFields: [
-          {
-            name: "title",
-            as: "text",
-            required: true,
-          },
-          {
-            name: "description",
-            as: "textarea",
-            required: true,
-          },
+          // {
+          //   name: "title",
+          //   as: "text",
+          //   required: true,
+          // },
+          // {
+          //   name: "description",
+          //   as: "textarea",
+          //   required: true,
+          // },
           {
             name: "case_no_or_parties",
             as: "text",
@@ -67,7 +68,7 @@ export default function Cases({ setLoading }) {
           },
           {
             name: "record",
-            as: "text",
+            as: "number",
             required: true,
           },
           {
@@ -124,16 +125,16 @@ export default function Cases({ setLoading }) {
         description: "Edit Case",
         anchorText: "Edit Case",
         editableFields: [
-          {
-            name: "title",
-            as: "text",
-            required: true,
-          },
-          {
-            name: "description",
-            as: "textarea",
-            required: true,
-          },
+          // {
+          //   name: "title",
+          //   as: "text",
+          //   required: true,
+          // },
+          // {
+          //   name: "description",
+          //   as: "textarea",
+          //   required: true,
+          // },
           {
             name: "case_no_or_parties",
             as: "text",

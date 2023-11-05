@@ -104,7 +104,7 @@ export default function Clients({ setLoading }) {
           },
           {
             name: "username",
-            as: "textarea",
+            as: "text",
             required: true,
           },
           {

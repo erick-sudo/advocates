@@ -67,7 +67,7 @@ export function ClientDetails({ client = {} }) {
         "file_reference",
         "clients_reference",
         "record",
-        "balance_due",
+        "outstanding",
         "paid_amount",
         "total_fee",
         "deposit_pay",
@@ -276,7 +276,7 @@ export function ClientDetails({ client = {} }) {
                     "file_reference",
                     "clients_reference",
                     "record",
-                    "balance_due",
+                    "outstanding",
                     "paid_amount",
                     "total_fee",
                     "deposit_pay",
@@ -302,7 +302,7 @@ export function ClientDetails({ client = {} }) {
             }
             selfVScroll={{
               vScroll: true,
-              vClasses: "px-2 pb-4 max-h-[70vh]",
+              vClasses: "px-2 pb-4 max-h-[80vh]",
             }}
             parityClassName={darkMode ? "odd:bg-stone-950" : "odd:bg-gray-200"}
             paginationConfig={{ ...clientCasesPaginationConfig }}
@@ -320,7 +320,7 @@ const CaseD = ({ casex, items, setItems, primaryKey }) => {
     "clients_reference",
     "record",
 
-    "balance_due",
+    "outstanding",
     "paid_amount",
     "total_fee",
 

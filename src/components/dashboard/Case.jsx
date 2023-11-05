@@ -510,9 +510,9 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                     <Progress
                       width={20}
                       completeColor="rgb(120 53 15)"
-                      incompleteColor="white"
+                      incompleteColor={`${darkMode ? "rgb(55, 65, 81, .99)" : "rgb(55, 65, 81, .5)"}`}
                       innerClassName={`${
-                        darkMode ? "bg-stone-900" : ""
+                        darkMode ? "bg-stone-900" : "red"
                       } font-extrabold text-amber-800`}
                       percentage={
                         (parseFloat(paymentInformation.paid_amount) /
@@ -600,9 +600,9 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                       <FontAwesomeIcon icon={faMoneyCheck} />
                     </div>
                     <div className="flex flex-col">
-                      <span>Balance</span>
+                      <span>Outstanding</span>
                       <span className="text-amber-800 font-bold px-2">
-                        {paymentInformation.balance_due}
+                        {paymentInformation.outstanding}
                       </span>
                       <div className="absolute shadow-md shadow-gray-700/10 hover:shadow-xl hover:shadow-gray-800/50 hover:scale-105 duration-300 rounded-lg px-2 py-1 right-2">
                         <EditModal
@@ -616,7 +616,7 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                             casey.id
                           )}
                           editableFields={[
-                            { name: "balance_due", as: "number" },
+                            { name: "outstanding", as: "number" },
                           ]}
                           anchorClassName="text-amber-800"
                           anchorText="......."
@@ -633,7 +633,7 @@ export function CaseDetails({ casex = {}, setLoading, normalCrudManipulator }) {
                       <FontAwesomeIcon icon={faMoneyCheckDollar} />
                     </div>
                     <div className="flex flex-col">
-                      <span>Settled</span>
+                      <span>Paid Amount</span>
                       <span className="text-amber-800 font-bold px-2">
                         {paymentInformation.paid_amount}
                       </span>
