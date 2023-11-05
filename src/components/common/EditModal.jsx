@@ -10,6 +10,7 @@ import { OptionSelection } from "./OptionSelection";
 import { ThreeDots } from "react-loader-spinner";
 
 export default function EditModal({
+  disableEditing = false,
   dataEndpoint = "",
   icon = <FontAwesomeIcon icon={faFileEdit} />,
   anchorText = "Edit",
@@ -86,6 +87,7 @@ export default function EditModal({
   return (
     <div className="">
       <ModalLink
+        disableAnchor={disableEditing}
         anchorClassName={anchorClassName}
         anchorText={anchorText}
         submitText="Save Changes"
@@ -110,7 +112,7 @@ export default function EditModal({
               (field) => formData[field] === undefined
             )
           ) &&
-          (Object.keys(formData).length > 0) ? (
+          Object.keys(formData).length > 0 ? (
             <div className="grid gap-4">
               <div className="grid gap-2 shadow-sm p-2 rounded">
                 {displayFields.map((field, index) => (

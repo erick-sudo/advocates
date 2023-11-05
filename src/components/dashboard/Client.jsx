@@ -12,7 +12,7 @@ import { AuthContext } from "../context/AuthContext";
 import { Pagination } from "../common/Pagination";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { utilityFunctions } from "../../assets/functions";
-import { faPencil } from "@fortawesome/free-solid-svg-icons";
+import { faPencil, faUsersViewfinder } from "@fortawesome/free-solid-svg-icons";
 import EditModal from "../common/EditModal";
 
 export function Client({ client, selectedClient, setSelectedClient }) {
@@ -345,6 +345,7 @@ const CaseD = ({ casex, items, setItems, primaryKey }) => {
           }}
         >
           {casex[c]}
+          {/* { !columns.slice(0, 4).includes(c) && !casex["payment_initialized"] && <button className="absolute hidden group-hover:flex items-center bottom-[90%] right-0 px-4 py-1 z-50 bg-stone-700 rounded hover:text-amber-600 duration-200 text-gray-300 font-bold text-xs gap-2"><FontAwesomeIcon icon={faUsersViewfinder} /><span >View Case</span></button>} */}
           <div className="absolute hidden group-hover:block bg-amber-800 hover:text-inherit hover:bg-black duration-300 rounded-tl-lg bottom-0 px-2 py-1 right-0">
             {columns.slice(0, 4).includes(c) ? (
               <EditModal
@@ -366,15 +367,14 @@ const CaseD = ({ casex, items, setItems, primaryKey }) => {
                 receiveNewRecord={(res) => {
                   setItems(
                     items.map((itm) => {
-                      return itm.id === res.id
-                        ? { ...itm, [c]: res[c] }
-                        : itm;
+                      return itm.id === res.id ? { ...itm, [c]: res[c] } : itm;
                     })
                   );
                 }}
               />
             ) : (
               <EditModal
+                disableEditing={!casex["payment_initialized"]}
                 description={`Change ${utilityFunctions.snakeCaseToTitleCase(
                   c
                 )}`}
