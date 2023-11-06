@@ -178,7 +178,7 @@ export function Dashboard() {
               )}
             </div>
             <div className="text-sm flex-grow relative">
-              <div className="absolute inset-0 overflow-y-scroll">
+              <div className="absolute inset-0 scroll_y">
                 <Routes>
                   <Route path="" element={<Dash />} />
                   <Route path="cases" element={<Cases {...{ setLoading }} />} />

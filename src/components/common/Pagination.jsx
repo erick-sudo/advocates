@@ -87,7 +87,7 @@ export function Pagination({
 
   const updateStagedItems = (id, action) => {
     if (action > 0) {
-      setStagedItems([id, ...stagedItems]);
+      setStagedItems([...stagedItems, id]);
     } else if (action < 0) {
       setStagedItems(stagedItems.filter((c) => c !== id));
     } else {
@@ -224,7 +224,16 @@ export function Pagination({
         behavior: "smooth",
       });
     }
+
+    return () => {
+      setItems([])
+      setNextPage(1)
+    }
   }, [refresher, endpoint, paginationEndpoint, populationEndpoint]);
+
+  const stagedViews = stagedItems.map((k) =>
+    items.find((itm) => itm[itemsPrimaryKey] === k)
+  );
 
   return (
     <div className="border-1 border-transparent">
@@ -243,106 +252,109 @@ export function Pagination({
           />
         )}
 
-        { (typeof DeleteComponent === "function" || typeof UpdateComponent === "function"  ) && <Dropdown>
-          <Dropdown.Toggle className="text-bg-dark px-4" variant="dark">
-            {stagedItems.length > 0 ? "Actions" : `Select ${modelName}`}
-          </Dropdown.Toggle>
-          {stagedItems.length > 0 && (
-            <Dropdown.Menu data-bs-theme="dark">
-              {typeof DeleteComponent === "function" && (
-                <>
-                  {stagedItems.length == 1 && (
-                    <Dropdown.Item>
-                      {/* Destroy Support */}
-                      <DeleteComponent
-                        recordPrimaryKey={stagedItems[0]}
-                        {...{
-                          interceptDestruction: interceptDestruction
-                            ? (id) => {
-                                if (
-                                  typeof interceptDestruction === "function"
-                                ) {
-                                  interceptDestruction(
-                                    id,
-                                    normalCrudManipulator
-                                  );
-                                } else {
-                                  normalCrudManipulator(id, -1);
+        {(typeof DeleteComponent === "function" ||
+          typeof UpdateComponent === "function") && (
+          <Dropdown>
+            <Dropdown.Toggle className="text-bg-dark px-4" variant="dark">
+              {stagedItems.length > 0 ? "Actions" : `Select ${modelName}`}
+            </Dropdown.Toggle>
+            {stagedItems.length > 0 && (
+              <Dropdown.Menu data-bs-theme="dark">
+                {typeof DeleteComponent === "function" && (
+                  <>
+                    {stagedItems.length == 1 && (
+                      <Dropdown.Item>
+                        {/* Destroy Support */}
+                        <DeleteComponent
+                          recordPrimaryKey={stagedItems[0]}
+                          {...{
+                            interceptDestruction: interceptDestruction
+                              ? (id) => {
+                                  if (
+                                    typeof interceptDestruction === "function"
+                                  ) {
+                                    interceptDestruction(
+                                      id,
+                                      normalCrudManipulator
+                                    );
+                                  } else {
+                                    normalCrudManipulator(id, -1);
+                                  }
                                 }
-                              }
-                            : undefined,
-                        }}
-                        {...normalCrudManipulator}
-                        {...deleteProps}
-                      />
-                    </Dropdown.Item>
-                  )}
-                  {stagedItems.length > 1 && (
-                    <Dropdown.Item>
-                      <DeleteComponent
-                        multiple={true}
-                        recordPrimaryKeys={stagedItems}
-                        {...{
-                          interceptDestruction: interceptDestruction
-                            ? (ids) => {
-                                if (
-                                  typeof interceptDestruction === "function"
-                                ) {
-                                  interceptDestruction(
-                                    ids,
-                                    normalCrudManipulator
-                                  );
-                                } else {
-                                  normalCrudManipulator(id, -1);
+                              : undefined,
+                          }}
+                          {...normalCrudManipulator}
+                          {...deleteProps}
+                        />
+                      </Dropdown.Item>
+                    )}
+                    {stagedItems.length > 1 && (
+                      <Dropdown.Item>
+                        <DeleteComponent
+                          multiple={true}
+                          recordPrimaryKeys={stagedItems}
+                          {...{
+                            interceptDestruction: interceptDestruction
+                              ? (ids) => {
+                                  if (
+                                    typeof interceptDestruction === "function"
+                                  ) {
+                                    interceptDestruction(
+                                      ids,
+                                      normalCrudManipulator
+                                    );
+                                  } else {
+                                    normalCrudManipulator(id, -1);
+                                  }
                                 }
-                              }
-                            : undefined,
-                        }}
-                        {...normalCrudManipulator}
-                        {...deleteProps}
-                      />
-                    </Dropdown.Item>
-                  )}
-                </>
-              )}
+                              : undefined,
+                          }}
+                          {...normalCrudManipulator}
+                          {...deleteProps}
+                        />
+                      </Dropdown.Item>
+                    )}
+                  </>
+                )}
 
-              {/* Destroy Support */}
-              {typeof UpdateComponent === "function" && (
-                <>
-                  {stagedItems.length == 1 && (
-                    <Dropdown.Item>
-                      <UpdateComponent
-                        {...{
-                          interceptUpdate: (payload) => {
-                            interceptUpdate(
-                              {
-                                payload: payload,
-                                [itemsPrimaryKey || "index"]: itemsPrimaryKey
-                                  ? items.find(
-                                      (i) =>
-                                        i[itemsPrimaryKey] === stagedItems[0]
-                                    )[itemsPrimaryKey]
-                                  : items.indexOf(stagedItems[0]),
-                              },
-                              normalCrudManipulator
-                            );
-                          },
-                        }}
-                        {...updateProps}
-                        {...{
-                          dataEndpoint: updateDataSource.replace(
-                            `<:${itemsPrimaryKey}>`,
-                            stagedItems[0]
-                          ),
-                        }}
-                      />
-                    </Dropdown.Item>
-                  )}
-                </>
-              )}
-            </Dropdown.Menu>
-          )}
-        </Dropdown>}
+                {/* Destroy Support */}
+                {typeof UpdateComponent === "function" && (
+                  <>
+                    {stagedItems.length == 1 && (
+                      <Dropdown.Item>
+                        <UpdateComponent
+                          {...{
+                            interceptUpdate: (payload) => {
+                              interceptUpdate(
+                                {
+                                  payload: payload,
+                                  [itemsPrimaryKey || "index"]: itemsPrimaryKey
+                                    ? items.find(
+                                        (i) =>
+                                          i[itemsPrimaryKey] === stagedItems[0]
+                                      )[itemsPrimaryKey]
+                                    : items.indexOf(stagedItems[0]),
+                                },
+                                normalCrudManipulator
+                              );
+                            },
+                          }}
+                          {...updateProps}
+                          {...{
+                            dataEndpoint: updateDataSource.replace(
+                              `<:${itemsPrimaryKey}>`,
+                              stagedItems[0]
+                            ),
+                          }}
+                        />
+                      </Dropdown.Item>
+                    )}
+                  </>
+                )}
+              </Dropdown.Menu>
+            )}
+          </Dropdown>
+        )}
       </div>
       {support && searchFields?.length > 0 && (
         <form onSubmit={handleSearch} className="flex-grow px-4 py-2">
@@ -446,13 +458,11 @@ export function Pagination({
                   typeof DeleteComponent === "function" ? (
                   <Item
                     {...{
-                      items,
                       primaryKey: itemsPrimaryKey,
-                      stagedItems,
                       updateStagedItems,
                     }}
                     key={index}
-                    index={index}
+                    staged={stagedItems.includes(componentData[itemsPrimaryKey])}
                     item={componentData}
                     parityClassName={parityClassName}
                   >
@@ -505,20 +515,14 @@ export function Pagination({
           {stagedItems.length > 0 ? (
             <div>
               {typeof ChildDetails === "function" &&
-                items
-                  .filter((item, index) =>
-                    stagedItems.includes(
-                      itemsPrimaryKey ? item[itemsPrimaryKey] : index
-                    )
-                  )
-                  .map((item, idx) => (
-                    <ChildDetails
-                      normalCrudManipulator={normalCrudManipulator}
-                      key={idx}
-                      {...{ [dataKey]: item }}
-                      {...detailsProps}
-                    />
-                  ))}
+                stagedViews.map((item, idx) => (
+                  <ChildDetails
+                    normalCrudManipulator={normalCrudManipulator}
+                    key={idx}
+                    {...{ [dataKey]: item }}
+                    {...detailsProps}
+                  />
+                ))}
             </div>
           ) : (
             <div>
@@ -539,40 +543,23 @@ export function Pagination({
 }
 
 function Item({
+  staged,
   children,
   item,
   primaryKey,
-  index,
-  items,
-  stagedItems,
   updateStagedItems,
   parityClassName,
 }) {
-  const [staged, setStaged] = useState(false);
-
-  useEffect(() => {
-    for (let item of items.map((itm) => itm.id)) {
-      const cs = stagedItems.map((c) => c.id).find((c) => c === item);
-      if (cs) {
-        setStaged(true);
-      } else {
-        setStaged(false);
-        break;
-      }
-    }
-  }, [items]);
-
   return (
     <div className={`flex ${parityClassName}`}>
       <div className="flex items-center justify-center min-w-[2.5rem] ">
         <input
           onChange={(e) => {
             e.stopPropagation();
-            setStaged((staged) => !staged);
             if (!e.target.checked) {
-              updateStagedItems(item[primaryKey] || index, -1);
+              updateStagedItems(item[primaryKey], -1);
             } else {
-              updateStagedItems(item[primaryKey] || index, 1);
+              updateStagedItems(item[primaryKey], 1);
             }
           }}
           className="scale-125 origin-center"

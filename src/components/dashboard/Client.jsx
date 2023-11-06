@@ -14,6 +14,7 @@ import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { utilityFunctions } from "../../assets/functions";
 import { faPencil, faUsersViewfinder } from "@fortawesome/free-solid-svg-icons";
 import EditModal from "../common/EditModal";
+import { usePagination } from "../hooks/usePagination";
 
 export function Client({ client, selectedClient, setSelectedClient }) {
   const { darkMode } = useContext(AuthContext);
@@ -48,42 +49,7 @@ export function ClientDetails({ client = {} }) {
   const [currentClient, setCurrentClient] = useState({});
   const [casesStatusTally, setCasesStatusTally] = useState({});
   const { darkMode } = useContext(AuthContext);
-
-  const clientCasesPaginationConfig = {
-    modelName: "Client",
-    itemsPrimaryKey: "id",
-    paginationEndpoint: `${endpoints.filter.filterClientCases
-      .replace("<:criteria>", "strict")
-      .replace("<:response>", "data")}/`,
-    populationEndpoint: endpoints.filter.filterClientCases
-      .replace("<:criteria>", "strict")
-      .replace("<:response>", "count"),
-    paginationEndpointHttpMethod: "POST",
-    populationEndpointHttpMethod: "POST",
-    postEndpointPayload: {
-      response_columns: [
-        "id",
-        "case_no_or_parties",
-        "file_reference",
-        "clients_reference",
-        "record",
-        "outstanding",
-        "paid_amount",
-        "total_fee",
-        "deposit_pay",
-        "deposit_fees",
-        "final_fees",
-        "final_pay",
-        "deposit",
-      ],
-      match_columns: {
-        client_id: client.id,
-      },
-    },
-    itemsPerPage: 10,
-    componentName: CaseD,
-    dataKey: "casex",
-  };
+  const [clientCases, setClientCases] = useState(null);
 
   useEffect(() => {
     setCurrentClient(client);
@@ -102,6 +68,56 @@ export function ClientDetails({ client = {} }) {
       });
     });
   }, [client]);
+
+  useEffect(() => {
+    setClientCases(
+      <Pagination
+        direction="vertical"
+        itemsClassName="grid gap-2"
+        recordsHeader={<div className="top-0 sticky w-full z-20"></div>}
+        selfVScroll={{
+          vScroll: true,
+          vClasses: "px-2 pb-4 max-h-[80vh]",
+        }}
+        parityClassName={darkMode ? "odd:bg-stone-950" : "odd:bg-gray-200"}
+        paginationConfig={{
+          modelName: "Client",
+          itemsPrimaryKey: "id",
+          paginationEndpoint: `${endpoints.filter.filterClientCases
+            .replace("<:criteria>", "strict")
+            .replace("<:response>", "data")}/`,
+          populationEndpoint: endpoints.filter.filterClientCases
+            .replace("<:criteria>", "strict")
+            .replace("<:response>", "count"),
+          paginationEndpointHttpMethod: "POST",
+          populationEndpointHttpMethod: "POST",
+          postEndpointPayload: {
+            response_columns: [
+              "id",
+              "case_no_or_parties",
+              "file_reference",
+              "clients_reference",
+              "record",
+              "outstanding",
+              "paid_amount",
+              "total_fee",
+              "deposit_pay",
+              "deposit_fees",
+              "final_fees",
+              "final_pay",
+              "deposit",
+            ],
+            match_columns: {
+              client_id: client.id,
+            },
+          },
+          itemsPerPage: 10,
+          componentName: CaseD,
+          dataKey: "casex",
+        }}
+      />
+    );
+  }, [currentClient]);
 
   const sortedStatistics = caseStates.map((s) => ({
     ...s,
@@ -264,56 +280,173 @@ export function ClientDetails({ client = {} }) {
         >
           {client.name}'s Cases
         </h4>
-        <div>
-          <Pagination
-            direction="vertical"
-            itemsClassName="grid gap-2"
-            recordsHeader={
-              <div className="top-0 sticky w-full z-20">
-                <ListGroup className="w-full" horizontal>
-                  {[
-                    "case_no_or_parties",
-                    "file_reference",
-                    "clients_reference",
-                    "record",
-                    "outstanding",
-                    "paid_amount",
-                    "total_fee",
-                    "deposit_pay",
-                    "deposit_fees",
-                    "final_fees",
-                    "final_pay",
-                    "deposit",
-                  ].map((c, i) => (
-                    <ListGroupItem
-                      variant="info"
-                      key={i}
-                      style={{
-                        minWidth: `${(1 / 7) * 100}%`,
-                        maxWidth: `${(1 / 7) * 100}%`,
-                        borderRadius: "0",
-                      }}
-                    >
-                      {utilityFunctions.snakeCaseToTitleCase(c)}
-                    </ListGroupItem>
-                  ))}
-                </ListGroup>
-              </div>
-            }
-            selfVScroll={{
-              vScroll: true,
-              vClasses: "px-2 pb-4 max-h-[80vh]",
-            }}
-            parityClassName={darkMode ? "odd:bg-stone-950" : "odd:bg-gray-200"}
-            paginationConfig={{ ...clientCasesPaginationConfig }}
-          />
-        </div>
+        <ClientCases client={client} />
       </div>
     </div>
   );
 }
 
-const CaseD = ({ casex, items, setItems, primaryKey }) => {
+const ClientCases = ({ client }) => {
+  const [handlePagination] = usePagination();
+
+  const [cases, setCases] = useState([]);
+  const [population, setPopulation] = useState(0);
+  const [page, setPage] = useState(1);
+
+  const handleCasePageFetch = (n, s) => {
+    handlePagination({
+      paginationEndpoint: `${endpoints.filter.filterClientCases
+        .replace("<:criteria>", "strict")
+        .replace("<:response>", "data")}/`,
+      populationEndpoint: endpoints.filter.filterClientCases
+        .replace("<:criteria>", "strict")
+        .replace("<:response>", "count"),
+      paginationEndpointHttpMethod: "POST",
+      populationEndpointHttpMethod: "POST",
+      payload: {
+        response_columns: [
+          "id",
+          "case_no_or_parties",
+          "file_reference",
+          "clients_reference",
+          "record",
+          "outstanding",
+          "paid_amount",
+          "total_fee",
+          "deposit_pay",
+          "deposit_fees",
+          "final_fees",
+          "final_pay",
+          "deposit",
+        ],
+        match_columns: {
+          client_id: client.id,
+        },
+      },
+      pageNumber: n,
+      pagePopulation: s,
+      errorCallback: (error) => {},
+      setEndpointPopulation: (pop) => {
+        setPopulation(pop);
+      },
+      successCallback: (res) => {
+        if (Array.isArray(res) && res.length > 0) {
+          setCases(res);
+        }
+      },
+    });
+  };
+
+  useEffect(() => {
+    handleCasePageFetch(page, 10);
+  }, [client, page]);
+
+  return (
+    <div className="">
+      <div className="scroll_x grid gap-1 p-2">
+        <ListGroup className="w-full" horizontal>
+          {[
+            "case_no_or_parties",
+            "file_reference",
+            "clients_reference",
+            "record",
+            "outstanding",
+            "paid_amount",
+            "total_fee",
+            "deposit_pay",
+            "deposit_fees",
+            "final_fees",
+            "final_pay",
+            "deposit",
+          ].map((c, i) => (
+            <ListGroupItem
+              variant="info"
+              key={i}
+              style={{
+                minWidth: `${(1 / 7) * 100}%`,
+                maxWidth: `${(1 / 7) * 100}%`,
+                borderRadius: "0",
+              }}
+            >
+              {utilityFunctions.snakeCaseToTitleCase(c)}
+            </ListGroupItem>
+          ))}
+        </ListGroup>
+        {cases.map((casex, i) => (
+          <CaseD cases={cases} setCases={setCases} key={i} casex={casex} />
+        ))}
+      </div>
+
+      {cases.length > 0 && (
+        <div className="px-4">
+          <LinearPagination
+            population={population}
+            currentPage={page}
+            itemsPerPage={10}
+            setPage={setPage}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
+const LinearPagination = ({
+  population,
+  setPage,
+  currentPage,
+  itemsPerPage,
+}) => {
+  const { darkMode } = useContext(AuthContext);
+  const N = Math.ceil(population / itemsPerPage);
+  const pages = new Array(N).fill(0).map((i, j) => j + 1);
+  return (
+    <div>
+      <div className="font-bold pt-4">
+        Page {currentPage} of {N}
+      </div>
+      <div className="flex  items-center gap-2 py-2">
+        {currentPage != 1 && (
+          <button
+            onClick={() => setPage(currentPage - 1)}
+            className={`px-4 py-1 bg-amber-700 text-white hover:bg-amber-800 duration-300 ${
+              darkMode ? "" : ""
+            }`}
+          >
+            Previous
+          </button>
+        )}
+        <div className="flex gap-2">
+          {pages.slice(currentPage - 1, currentPage + 3).map((p, i) => (
+            <button
+              onClick={() => setPage(p)}
+              className={`px-2 ${
+                p == currentPage
+                  ? "bg-amber-700 text-white hover:bg-amber-800"
+                  : "shadow-inner shadow-black"
+              } duration-300`}
+              key={i}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+        {currentPage != N && (
+          <button
+            onClick={() => setPage(currentPage + 1)}
+            className={`px-4 py-1 bg-amber-700 text-white hover:bg-amber-800 duration-300 ${
+              darkMode ? "" : ""
+            }`}
+          >
+            Next
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const CaseD = ({ casex, cases, setCases }) => {
   const columns = [
     "case_no_or_parties",
     "file_reference",
@@ -365,8 +498,8 @@ const CaseD = ({ casex, items, setItems, primaryKey }) => {
                 anchorText="..."
                 icon={<FontAwesomeIcon icon={faPencil} />}
                 receiveNewRecord={(res) => {
-                  setItems(
-                    items.map((itm) => {
+                  setCases(
+                    cases.map((itm) => {
                       return itm.id === res.id ? { ...itm, [c]: res[c] } : itm;
                     })
                   );
@@ -391,8 +524,8 @@ const CaseD = ({ casex, items, setItems, primaryKey }) => {
                 anchorText="..."
                 icon={<FontAwesomeIcon icon={faPencil} />}
                 receiveNewRecord={(res) => {
-                  setItems(
-                    items.map((itm) => {
+                  setCases(
+                    cases.map((itm) => {
                       return itm.id === res.case_id
                         ? { ...itm, [c]: res[c] }
                         : itm;

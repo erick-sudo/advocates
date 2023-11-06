@@ -113,7 +113,10 @@ function ExportClientCases() {
         <div className="py-2 px-4">
           <FilterMaster
             title={selectedClient.name}
-            and={{ field: "client_id", value: selectedClient.id }}
+            and={{
+              field: "client_only",
+              value: { client_and_id: selectedClient.id },
+            }}
             filterEndpoint={endpoints.filter.filterCases}
             supportedFilterFields={[
               "id",
@@ -171,7 +174,7 @@ function FilterMaster({
         response_columns: responseColumns,
       };
       if (field) {
-        payload.match_columns[field] = value;
+        payload[field] = value;
       }
       setLoading(true);
       apiCalls.postRequest({

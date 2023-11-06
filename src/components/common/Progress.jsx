@@ -52,7 +52,7 @@ export function Progress({
     }%`;
 
     const interval = setInterval(() => {
-      if (start > percentage || percentage == 100) {
+      if (start > percentage || start == 100) {
         clear();
         return;
       }
